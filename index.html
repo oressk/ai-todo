@@ -41,17 +41,15 @@
   th.sort { cursor: pointer; user-select: none; }
   th.sort::after { content: " ↕"; color: var(--muted); }
   td { padding: 9px 12px; border-bottom: 1px solid var(--grid); vertical-align: top; }
-  tr:last-child td { border-bottom: none; }
+  tbody:last-of-type tr:last-child td { border-bottom: none; }
   td.d, th.d { width: 7.5em; white-space: nowrap; }
-  td.s, th.s { width: 7em; }
+  tr.subhead th { color: var(--ink-2); font-size: 12px; font-weight: 600; padding: 16px 12px 4px;
+    border-bottom: 1px solid var(--muted); }
+  tbody:first-of-type tr.subhead th { padding-top: 10px; }
+  tr.subhead .n { color: var(--muted); font-weight: 500; margin-left: 4px; font-variant-numeric: tabular-nums; }
   .date { display: block; font-variant-numeric: tabular-nums; }
   .ago { display: block; font-size: 11.5px; color: var(--muted); }
   .note { font-size: 12px; color: var(--ink-2); margin-top: 2px; }
-  .chip { display: inline-block; font-size: 11.5px; font-weight: 600; padding: 1px 9px; border-radius: 99px;
-    border: 1px solid currentColor; white-space: nowrap; }
-  .c1 { color: var(--s1); } .c2 { color: var(--s2); } .c3 { color: var(--s3); } .c4 { color: var(--s4); }
-  .c5 { color: var(--s5); } .c6 { color: var(--s6); } .c7 { color: var(--s7); }
-  .chip.unsorted { color: var(--muted); border-style: dashed; }
   tr.empty td { text-align: center; color: var(--muted); padding: 28px; }
   .recent { margin-top: 22px; }
   .recent summary { cursor: pointer; font-size: 13px; color: var(--ink-2); margin-bottom: 8px; }
@@ -63,7 +61,6 @@
   @media (max-width: 560px) {
     td, th { padding: 8px 8px; }
     td.d, th.d { width: 5.6em; }
-    td.s, th.s { width: 5.6em; }
   }
 </style>
 </head>
@@ -72,13 +69,13 @@
 <header>
   <h1>AI管理のTODO</h1>
   <span class="count">未完了 7件</span>
-  <span class="asof">最終更新 2026/10/16 15:38</span>
+  <span class="asof">最終更新 2026/10/16 16:48</span>
 </header>
 <p class="lead">日付を決めていない「やる必要があること」の一覧。Claude/Codexが更新しています。</p>
 <div class="filters"><button class="filter on" data-f="">すべて <b>7</b></button><button class="filter" data-f="AI関連">AI関連 <b>1</b></button><button class="filter" data-f="ADMIN">ADMIN <b>1</b></button><button class="filter" data-f="投資">投資 <b>2</b></button><button class="filter" data-f="生活">生活 <b>3</b></button></div>
 <table id="todo">
-  <thead><tr><th class="d sort" data-k="d">登録日</th><th>タイトル</th><th class="s sort" data-k="s">セクション</th></tr></thead>
-  <tbody><tr data-s="AI関連" data-d="2026-10-16T11:57:53+09:00" data-r="0"><td class="d"><span class="date">2026/10/16</span><span class="ago"></span></td><td class="t">LAN配信サイトの整理</td><td class="s"><span class="chip c1">AI関連</span></td></tr><tr data-s="ADMIN" data-d="2026-10-16T11:57:53+09:00" data-r="1"><td class="d"><span class="date">2026/10/16</span><span class="ago"></span></td><td class="t">不要サイトの登録内容変更</td><td class="s"><span class="chip c2">ADMIN</span></td></tr><tr data-s="投資" data-d="2026-10-16T11:57:53+09:00" data-r="2"><td class="d"><span class="date">2026/10/16</span><span class="ago"></span></td><td class="t">株の取引履歴の整備</td><td class="s"><span class="chip c3">投資</span></td></tr><tr data-s="投資" data-d="2026-10-16T11:57:53+09:00" data-r="2"><td class="d"><span class="date">2026/10/16</span><span class="ago"></span></td><td class="t">クリプトの取引履歴の整備</td><td class="s"><span class="chip c3">投資</span></td></tr><tr data-s="生活" data-d="2026-10-16T11:57:53+09:00" data-r="6"><td class="d"><span class="date">2026/10/16</span><span class="ago"></span></td><td class="t">歯医者のリスケ</td><td class="s"><span class="chip c7">生活</span></td></tr><tr data-s="生活" data-d="2026-10-16T11:57:53+09:00" data-r="6"><td class="d"><span class="date">2026/10/16</span><span class="ago"></span></td><td class="t">時計の選定</td><td class="s"><span class="chip c7">生活</span></td></tr><tr data-s="生活" data-d="2026-10-16T11:57:53+09:00" data-r="6"><td class="d"><span class="date">2026/10/16</span><span class="ago"></span></td><td class="t">秋服の選定</td><td class="s"><span class="chip c7">生活</span></td></tr></tbody>
+  <thead><tr><th class="d sort" data-k="d">登録日</th><th>タイトル</th></tr></thead>
+  <tbody data-s="AI関連"><tr class="subhead"><th colspan="2">AI関連 <span class="n">1</span></th></tr><tr data-d="2026-10-16T11:57:53+09:00"><td class="d"><span class="date">2026/10/16</span><span class="ago"></span></td><td class="t">LAN配信サイトの整理</td></tr></tbody><tbody data-s="ADMIN"><tr class="subhead"><th colspan="2">ADMIN <span class="n">1</span></th></tr><tr data-d="2026-10-16T11:57:53+09:00"><td class="d"><span class="date">2026/10/16</span><span class="ago"></span></td><td class="t">不要サイトの登録内容変更</td></tr></tbody><tbody data-s="投資"><tr class="subhead"><th colspan="2">投資 <span class="n">2</span></th></tr><tr data-d="2026-10-16T11:57:53+09:00"><td class="d"><span class="date">2026/10/16</span><span class="ago"></span></td><td class="t">株の取引履歴の整備</td></tr><tr data-d="2026-10-16T11:57:53+09:00"><td class="d"><span class="date">2026/10/16</span><span class="ago"></span></td><td class="t">クリプトの取引履歴の整備</td></tr></tbody><tbody data-s="生活"><tr class="subhead"><th colspan="2">生活 <span class="n">3</span></th></tr><tr data-d="2026-10-16T11:57:53+09:00"><td class="d"><span class="date">2026/10/16</span><span class="ago"></span></td><td class="t">歯医者のリスケ</td></tr><tr data-d="2026-10-16T11:57:53+09:00"><td class="d"><span class="date">2026/10/16</span><span class="ago"></span></td><td class="t">時計の選定</td></tr><tr data-d="2026-10-16T11:57:53+09:00"><td class="d"><span class="date">2026/10/16</span><span class="ago"></span></td><td class="t">秋服の選定</td></tr></tbody>
 </table>
 
 </main>
@@ -93,22 +90,20 @@
   const filters = document.querySelectorAll(".filter");
   filters.forEach(b => b.addEventListener("click", () => {
     filters.forEach(x => x.classList.toggle("on", x === b));
-    document.querySelectorAll("#todo tr[data-s]").forEach(tr => {
-      tr.hidden = !!b.dataset.f && tr.dataset.s !== b.dataset.f;
+    document.querySelectorAll("#todo tbody[data-s]").forEach(tb => {
+      tb.hidden = !!b.dataset.f && tb.dataset.s !== b.dataset.f;
     });
   }));
-  const body = document.querySelector("#todo tbody");
+  // 登録日の並べ替えは各セクションの中で行う（小見出しは先頭のまま）
   let dir = 1;
-  document.querySelectorAll("#todo th.sort").forEach(th => th.addEventListener("click", () => {
-    const rows = [...body.querySelectorAll("tr[data-d]")];
-    if (th.dataset.k === "d") {
-      dir = -dir;
-      rows.sort((a, b) => dir * a.dataset.d.localeCompare(b.dataset.d));
-    } else {
-      rows.sort((a, b) => (a.dataset.r - b.dataset.r) || a.dataset.d.localeCompare(b.dataset.d));
-    }
-    rows.forEach(r => body.appendChild(r));
-  }));
+  document.querySelector("#todo th.sort").addEventListener("click", () => {
+    dir = -dir;
+    document.querySelectorAll("#todo tbody[data-s]").forEach(tb => {
+      [...tb.querySelectorAll("tr[data-d]")]
+        .sort((a, b) => dir * a.dataset.d.localeCompare(b.dataset.d))
+        .forEach(r => tb.appendChild(r));
+    });
+  });
 })();
 </script>
 </body>
