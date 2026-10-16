@@ -69,7 +69,7 @@
 <header>
   <h1>AI管理のTODO</h1>
   <span class="count">未完了 7件</span>
-  <span class="asof">最終更新 2026/10/16 16:48</span>
+  <span class="asof">最終更新 2026/10/16 16:53</span>
 </header>
 <p class="lead">日付を決めていない「やる必要があること」の一覧。Claude/Codexが更新しています。</p>
 <div class="filters"><button class="filter on" data-f="">すべて <b>7</b></button><button class="filter" data-f="AI関連">AI関連 <b>1</b></button><button class="filter" data-f="ADMIN">ADMIN <b>1</b></button><button class="filter" data-f="投資">投資 <b>2</b></button><button class="filter" data-f="生活">生活 <b>3</b></button></div>
@@ -85,7 +85,7 @@
   document.querySelectorAll("#todo tr[data-d]").forEach(tr => {
     const d = new Date(tr.dataset.d.slice(0, 10) + "T00:00:00");
     const n = Math.round((today - d) / 86400000);
-    tr.querySelector(".ago").textContent = n <= 0 ? "今日" : n + "日前";
+    tr.querySelector(".ago").textContent = n <= 0 ? "" : n + "日前";  // 当日登録分は出さない（2026-10-16 殿の指定）
   });
   const filters = document.querySelectorAll(".filter");
   filters.forEach(b => b.addEventListener("click", () => {
