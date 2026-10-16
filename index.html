@@ -48,7 +48,8 @@
   tbody:first-of-type tr.subhead th { padding-top: 10px; }
   tr.subhead .n { color: var(--muted); font-weight: 500; margin-left: 4px; font-variant-numeric: tabular-nums; }
   .date { display: block; font-variant-numeric: tabular-nums; }
-  .note { font-size: 12px; color: var(--ink-2); margin-top: 2px; }
+  td.t, th.t { width: 45%; }
+  td.m { font-size: 12.5px; color: var(--ink-2); }
   tr.empty td { text-align: center; color: var(--muted); padding: 28px; }
   .recent { margin-top: 22px; }
   .recent summary { cursor: pointer; font-size: 13px; color: var(--ink-2); margin-bottom: 8px; }
@@ -68,12 +69,12 @@
 <header>
   <h1>AI管理のTODO</h1>
   <span class="count">未完了 7件</span>
-  <span class="asof">最終更新 2026/10/16 16:59</span>
+  <span class="asof">最終更新 2026/10/16 17:15</span>
 </header>
 <p class="lead">日付を決めていない「やる必要があること」の一覧。Claude/Codexが更新しています。</p>
 <div class="filters"><button class="filter on" data-f="">すべて <b>7</b></button><button class="filter" data-f="AI関連">AI関連 <b>1</b></button><button class="filter" data-f="ADMIN">ADMIN <b>1</b></button><button class="filter" data-f="投資">投資 <b>2</b></button><button class="filter" data-f="生活">生活 <b>3</b></button></div>
 <table id="todo">
-  <thead><tr><th class="d sort" data-k="d">登録日</th><th>タイトル</th></tr></thead>
+  <thead><tr><th class="d sort" data-k="d">登録日</th><th class="t">タイトル</th></tr></thead>
   <tbody data-s="AI関連"><tr class="subhead"><th colspan="2">AI関連 <span class="n">1</span></th></tr><tr data-d="2026-10-16T11:57:53+09:00"><td class="d"><span class="date">2026/10/16</span></td><td class="t">LAN配信サイトの整理</td></tr></tbody><tbody data-s="ADMIN"><tr class="subhead"><th colspan="2">ADMIN <span class="n">1</span></th></tr><tr data-d="2026-10-16T11:57:53+09:00"><td class="d"><span class="date">2026/10/16</span></td><td class="t">不要サイトの登録内容変更</td></tr></tbody><tbody data-s="投資"><tr class="subhead"><th colspan="2">投資 <span class="n">2</span></th></tr><tr data-d="2026-10-16T11:57:53+09:00"><td class="d"><span class="date">2026/10/16</span></td><td class="t">株の取引履歴の整備</td></tr><tr data-d="2026-10-16T11:57:53+09:00"><td class="d"><span class="date">2026/10/16</span></td><td class="t">クリプトの取引履歴の整備</td></tr></tbody><tbody data-s="生活"><tr class="subhead"><th colspan="2">生活 <span class="n">3</span></th></tr><tr data-d="2026-10-16T11:57:53+09:00"><td class="d"><span class="date">2026/10/16</span></td><td class="t">歯医者のリスケ</td></tr><tr data-d="2026-10-16T11:57:53+09:00"><td class="d"><span class="date">2026/10/16</span></td><td class="t">時計の選定</td></tr><tr data-d="2026-10-16T11:57:53+09:00"><td class="d"><span class="date">2026/10/16</span></td><td class="t">秋服の選定</td></tr></tbody>
 </table>
 
