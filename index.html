@@ -53,13 +53,6 @@
   td.t, th.t { width: 45%; }
   td.m { font-size: 12.5px; color: var(--ink-2); }
   tr.empty td { text-align: center; color: var(--muted); padding: 28px; }
-  .recent { margin-top: 22px; }
-  .recent summary { cursor: pointer; font-size: 13px; color: var(--ink-2); margin-bottom: 8px; }
-  .recent td { color: var(--ink-2); }
-  .st { font-size: 11px; color: var(--muted); border: 1px solid var(--border); border-radius: 4px;
-    padding: 0 5px; margin-right: 6px; }
-  .st-done { color: var(--s4); }
-  .dest { font-size: 12px; color: var(--muted); }
   @media (max-width: 560px) {
     td, th { padding: 8px 8px; }
     td.d, th.d { width: 5.6em; }
@@ -72,7 +65,7 @@
 <header>
   <h1>AI管理のTODO</h1>
   <span class="count">未完了 9件</span>
-  <span class="asof">最終更新 2026/10/16 21:00</span>
+  <span class="asof">最終更新 2026/10/16 22:13</span>
 </header>
 <p class="lead">日付を決めていない「やる必要があること」の一覧。Claude/Codexが更新しています。</p>
 <div class="filters"><button class="filter on" data-f="">すべて <b>9</b></button><button class="filter" data-f="ADMIN">ADMIN <b>1</b></button><button class="filter" data-f="生活">生活 <b>3</b></button><button class="filter" data-f="AI関連">AI関連 <b>3</b></button><button class="filter" data-f="株関連">株関連 <b>1</b></button><button class="filter" data-f="クリプト関連">クリプト関連 <b>1</b></button></div>
@@ -80,7 +73,6 @@
   <thead><tr><th class="no">No.</th><th class="d sort" data-k="d">登録日</th><th class="t">タイトル</th><th class="m">メモ</th></tr></thead>
   <tbody data-s="ADMIN"><tr class="subhead"><th colspan="4"><span class="code">0</span>ADMIN <span class="n">1</span></th></tr><tr data-d="2026-10-16T11:57:53+09:00"><td class="no">0-1</td><td class="d"><span class="date">2026/10/16</span></td><td class="t">不要サイトの登録内容変更</td><td class="m">セキュリティ対策</td></tr></tbody><tbody data-s="生活"><tr class="subhead"><th colspan="4"><span class="code">1</span>生活 <span class="n">3</span></th></tr><tr data-d="2026-10-16T11:57:53+09:00"><td class="no">1-1</td><td class="d"><span class="date">2026/10/16</span></td><td class="t">歯医者のリスケ</td><td class="m"></td></tr><tr data-d="2026-10-16T11:57:53+09:00"><td class="no">1-2</td><td class="d"><span class="date">2026/10/16</span></td><td class="t">時計の選定</td><td class="m"></td></tr><tr data-d="2026-10-16T11:57:53+09:00"><td class="no">1-3</td><td class="d"><span class="date">2026/10/16</span></td><td class="t">秋服の選定</td><td class="m"></td></tr></tbody><tbody data-s="AI関連"><tr class="subhead"><th colspan="4"><span class="code">2</span>AI関連 <span class="n">3</span></th></tr><tr data-d="2026-10-16T11:57:53+09:00"><td class="no">2-1</td><td class="d"><span class="date">2026/10/16</span></td><td class="t">LAN配信サイトの整理</td><td class="m"></td></tr><tr data-d="2026-10-16T18:59:29+09:00"><td class="no">2-2</td><td class="d"><span class="date">2026/10/16</span></td><td class="t">1Passwordのサービスアカウント作成</td><td class="m"></td></tr><tr data-d="2026-10-16T18:59:31+09:00"><td class="no">2-3</td><td class="d"><span class="date">2026/10/16</span></td><td class="t">1Passwordサービスアカウントを使えるように整備</td><td class="m"></td></tr></tbody><tbody data-s="株関連"><tr class="subhead"><th colspan="4"><span class="code">3</span>株関連 <span class="n">1</span></th></tr><tr data-d="2026-10-16T11:57:53+09:00"><td class="no">3-1</td><td class="d"><span class="date">2026/10/16</span></td><td class="t">株の取引履歴の整備</td><td class="m"></td></tr></tbody><tbody data-s="クリプト関連"><tr class="subhead"><th colspan="4"><span class="code">4</span>クリプト関連 <span class="n">1</span></th></tr><tr data-d="2026-10-16T11:57:53+09:00"><td class="no">4-1</td><td class="d"><span class="date">2026/10/16</span></td><td class="t">クリプトの取引履歴の整備</td><td class="m"></td></tr></tbody>
 </table>
-
 </main>
 <script>
 (() => {
