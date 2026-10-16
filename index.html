@@ -43,6 +43,7 @@
   td { padding: 9px 12px; border-bottom: 1px solid var(--grid); vertical-align: top; }
   tbody:last-of-type tr:last-child td { border-bottom: none; }
   td.d, th.d { width: 7.5em; white-space: nowrap; }
+  td.no, th.no { width: 3.2em; white-space: nowrap; color: var(--ink-2); font-variant-numeric: tabular-nums; }
   tr.subhead th { color: var(--ink-2); font-size: 12px; font-weight: 600; padding: 16px 12px 4px;
     border-bottom: 1px solid var(--muted); }
   tbody:first-of-type tr.subhead th { padding-top: 10px; }
@@ -61,6 +62,7 @@
   @media (max-width: 560px) {
     td, th { padding: 8px 8px; }
     td.d, th.d { width: 5.6em; }
+    td.no, th.no { width: 2.6em; padding-right: 2px; }
   }
 </style>
 </head>
@@ -69,13 +71,13 @@
 <header>
   <h1>AI管理のTODO</h1>
   <span class="count">未完了 9件</span>
-  <span class="asof">最終更新 2026/10/16 18:59</span>
+  <span class="asof">最終更新 2026/10/16 19:01</span>
 </header>
 <p class="lead">日付を決めていない「やる必要があること」の一覧。Claude/Codexが更新しています。</p>
 <div class="filters"><button class="filter on" data-f="">すべて <b>9</b></button><button class="filter" data-f="AI関連">AI関連 <b>3</b></button><button class="filter" data-f="ADMIN">ADMIN <b>1</b></button><button class="filter" data-f="投資">投資 <b>2</b></button><button class="filter" data-f="生活">生活 <b>3</b></button></div>
 <table id="todo">
-  <thead><tr><th class="d sort" data-k="d">登録日</th><th class="t">タイトル</th><th class="m">メモ</th></tr></thead>
-  <tbody data-s="AI関連"><tr class="subhead"><th colspan="3">AI関連 <span class="n">3</span></th></tr><tr data-d="2026-10-16T11:57:53+09:00"><td class="d"><span class="date">2026/10/16</span></td><td class="t">LAN配信サイトの整理</td><td class="m"></td></tr><tr data-d="2026-10-16T18:59:29+09:00"><td class="d"><span class="date">2026/10/16</span></td><td class="t">1Passwordのサービスアカウント作成</td><td class="m"></td></tr><tr data-d="2026-10-16T18:59:31+09:00"><td class="d"><span class="date">2026/10/16</span></td><td class="t">1Passwordサービスアカウントを使えるように整備</td><td class="m"></td></tr></tbody><tbody data-s="ADMIN"><tr class="subhead"><th colspan="3">ADMIN <span class="n">1</span></th></tr><tr data-d="2026-10-16T11:57:53+09:00"><td class="d"><span class="date">2026/10/16</span></td><td class="t">不要サイトの登録内容変更</td><td class="m">セキュリティ対策</td></tr></tbody><tbody data-s="投資"><tr class="subhead"><th colspan="3">投資 <span class="n">2</span></th></tr><tr data-d="2026-10-16T11:57:53+09:00"><td class="d"><span class="date">2026/10/16</span></td><td class="t">株の取引履歴の整備</td><td class="m"></td></tr><tr data-d="2026-10-16T11:57:53+09:00"><td class="d"><span class="date">2026/10/16</span></td><td class="t">クリプトの取引履歴の整備</td><td class="m"></td></tr></tbody><tbody data-s="生活"><tr class="subhead"><th colspan="3">生活 <span class="n">3</span></th></tr><tr data-d="2026-10-16T11:57:53+09:00"><td class="d"><span class="date">2026/10/16</span></td><td class="t">歯医者のリスケ</td><td class="m"></td></tr><tr data-d="2026-10-16T11:57:53+09:00"><td class="d"><span class="date">2026/10/16</span></td><td class="t">時計の選定</td><td class="m"></td></tr><tr data-d="2026-10-16T11:57:53+09:00"><td class="d"><span class="date">2026/10/16</span></td><td class="t">秋服の選定</td><td class="m"></td></tr></tbody>
+  <thead><tr><th class="no">No.</th><th class="d sort" data-k="d">登録日</th><th class="t">タイトル</th><th class="m">メモ</th></tr></thead>
+  <tbody data-s="AI関連"><tr class="subhead"><th colspan="4">AI関連 <span class="n">3</span></th></tr><tr data-d="2026-10-16T11:57:53+09:00"><td class="no">#9</td><td class="d"><span class="date">2026/10/16</span></td><td class="t">LAN配信サイトの整理</td><td class="m"></td></tr><tr data-d="2026-10-16T18:59:29+09:00"><td class="no">#10</td><td class="d"><span class="date">2026/10/16</span></td><td class="t">1Passwordのサービスアカウント作成</td><td class="m"></td></tr><tr data-d="2026-10-16T18:59:31+09:00"><td class="no">#11</td><td class="d"><span class="date">2026/10/16</span></td><td class="t">1Passwordサービスアカウントを使えるように整備</td><td class="m"></td></tr></tbody><tbody data-s="ADMIN"><tr class="subhead"><th colspan="4">ADMIN <span class="n">1</span></th></tr><tr data-d="2026-10-16T11:57:53+09:00"><td class="no">#4</td><td class="d"><span class="date">2026/10/16</span></td><td class="t">不要サイトの登録内容変更</td><td class="m">セキュリティ対策</td></tr></tbody><tbody data-s="投資"><tr class="subhead"><th colspan="4">投資 <span class="n">2</span></th></tr><tr data-d="2026-10-16T11:57:53+09:00"><td class="no">#5</td><td class="d"><span class="date">2026/10/16</span></td><td class="t">株の取引履歴の整備</td><td class="m"></td></tr><tr data-d="2026-10-16T11:57:53+09:00"><td class="no">#6</td><td class="d"><span class="date">2026/10/16</span></td><td class="t">クリプトの取引履歴の整備</td><td class="m"></td></tr></tbody><tbody data-s="生活"><tr class="subhead"><th colspan="4">生活 <span class="n">3</span></th></tr><tr data-d="2026-10-16T11:57:53+09:00"><td class="no">#3</td><td class="d"><span class="date">2026/10/16</span></td><td class="t">歯医者のリスケ</td><td class="m"></td></tr><tr data-d="2026-10-16T11:57:53+09:00"><td class="no">#7</td><td class="d"><span class="date">2026/10/16</span></td><td class="t">時計の選定</td><td class="m"></td></tr><tr data-d="2026-10-16T11:57:53+09:00"><td class="no">#8</td><td class="d"><span class="date">2026/10/16</span></td><td class="t">秋服の選定</td><td class="m"></td></tr></tbody>
 </table>
 
 </main>
