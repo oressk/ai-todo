@@ -1,6 +1,6 @@
 {
  "schema_version": 1,
- "updated_at": "2026-11-01T17:18:08+09:00",
+ "updated_at": "2026-11-01T19:48:03+09:00",
  "categories": [
   "要状況観察",
   "AI関連",
@@ -12,6 +12,16 @@
   "読み物・話題"
  ],
  "items": [
+  {
+   "id": "2116695204266991846",
+   "url": "https://x.com/_ryu15_/status/2116695204266991846",
+   "author": "@_ryu15_",
+   "posted_at": "2026-11-01T09:53:57+09:00",
+   "title": "MuseにGrok Build導入で情報収集が強化",
+   "summary": "AIエージェント「Muse」にGrok Buildを入れるとx_searchで情報収集が最強になり、最安のX統合プランで格安Grok Bot化できるという提案を引用。投稿者は実際に導入し、PC不要でXのAI発表チェックを8時間ごとに定期実行させる画面を紹介。OpenCodeの無料モデルはIPブロック気味とも。",
+   "category": "AI関連",
+   "found_at": "2026-11-01T19:48:03+09:00"
+  },
   {
    "id": "2116482068976927093",
    "url": "https://x.com/shirouzu_pua/status/2116482068976927093",
