@@ -65,6 +65,18 @@
   td.t a { color: inherit; text-decoration: underline; text-decoration-color: var(--muted); text-underline-offset: 2px; }
   td.t a:hover { text-decoration-color: var(--s1); }
   .by { display: block; font-size: 12px; color: var(--muted); margin-top: 2px; }
+  #bookmark tr.subhead th { padding: 0; }
+  #bookmark td { overflow-wrap: anywhere; }
+  .fold { display: block; width: 100%; font: inherit; font-size: 13.5px; color: inherit; background: none; border: none;
+    text-align: left; cursor: pointer; padding: 10px 12px; }
+  .fold::before { content: "▸"; display: inline-block; width: 1.2em; color: var(--ink-2); }
+  .fold[aria-expanded="true"]::before { content: "▾"; }
+  .fold-all { font: inherit; font-size: 12.5px; color: var(--ink-2); background: none; border: none; cursor: pointer;
+    margin-left: auto; padding: 3px 4px; text-decoration: underline; text-decoration-color: var(--muted); text-underline-offset: 2px; }
+  .fold:focus-visible, .fold-all:focus-visible { outline: 2px solid var(--s1); outline-offset: -2px; }
+  tbody.shut tr[data-d] { display: none; }
+  tbody.shut tr.subhead th { border-bottom-color: var(--grid); }
+  tbody.shut:last-of-type tr.subhead th { border-bottom: none; }
   @media (max-width: 560px) {
     td, th { padding: 8px 8px; }
     td.d, th.d { width: 5.6em; }
@@ -80,7 +92,7 @@
 <header>
   <h1>AI管理のTODO</h1>
   <span class="count">TODO 7件 ／ やりたい事 6件 ／ 備忘録 1件 ／ X Bookmark <span id="n-bm">…</span>件</span>
-  <span class="asof">最終更新 2026/11/01 01:04</span>
+  <span class="asof">最終更新 2026/11/04 18:19</span>
 </header>
 <p class="lead">日付を決めていない「やる必要があること（TODO）」と「いつかやりたい事」、覚えておきたい「備忘録」、Xでブックマークした投稿の一覧。X BookmarkはGrok Bot、ほかはClaude/Codexが更新しています。</p>
 <div class="tabs" role="tablist" aria-label="種類">
@@ -171,6 +183,18 @@
       items.forEach(i => { if (cat(i) !== "未分類" && !groups.has(cat(i))) groups.set(cat(i), []); });
       if (!groups.has("未分類")) groups.set("未分類", []);
       items.forEach(i => groups.get(cat(i)).push(i));
+      // カテゴリは見出しの行で開閉する。最初は全部閉じ、開いているカテゴリは見る人のブラウザにだけ覚える（2026-11-04 殿の依頼）
+      const FOLD_KEY = "xbm-open";
+      let remembered = [];
+      try {
+        const v = JSON.parse(localStorage.getItem(FOLD_KEY));
+        if (Array.isArray(v)) remembered = v;
+      } catch (e) {}
+      const isOpen = tb => !tb.classList.contains("shut");
+      const setOpen = (tb, on) => {
+        tb.classList.toggle("shut", !on);
+        tb.querySelector(".fold").setAttribute("aria-expanded", on ? "true" : "false");
+      };
       const filters = bm.querySelector(".filters");
       const chip = (label, f, n) => {
         const b = el("button", "filter" + (f ? "" : " on"), label + " ");
@@ -182,9 +206,9 @@
       groups.forEach((list, name) => {
         if (!list.length) return;
         filters.appendChild(chip(name, name, list.length));
-        const tb = el("tbody"), sub = el("tr", "subhead"), th = el("th", null, name + " ");
-        tb.dataset.s = name; th.colSpan = 3; th.appendChild(el("span", "n", String(list.length)));
-        sub.appendChild(th); tb.appendChild(sub);
+        const tb = el("tbody"), sub = el("tr", "subhead"), th = el("th"), fold = el("button", "fold", name + " ");
+        tb.dataset.s = name; th.colSpan = 3; fold.type = "button"; fold.appendChild(el("span", "n", String(list.length)));
+        th.appendChild(fold); sub.appendChild(th); tb.appendChild(sub);
         list.sort((a, b) => key(b).localeCompare(key(a))).forEach(i => {
           const tr = el("tr"), date = el("td", "d"), title = el("td", "t"), body = el("td", "c", str(i.summary));
           tr.dataset.d = key(i);
@@ -199,9 +223,31 @@
           if (/^@[A-Za-z0-9_]{1,15}$/.test(str(i.author))) body.appendChild(el("span", "by", i.author));
           tr.append(date, title, body); tb.appendChild(tr);
         });
+        setOpen(tb, remembered.includes(name));
         table.appendChild(tb);
       });
+      const bodies = [...table.querySelectorAll("tbody[data-s]")];
+      const foldAll = el("button", "fold-all");
+      foldAll.type = "button";
+      const labelAll = () => { foldAll.textContent = bodies.some(isOpen) ? "すべて閉じる" : "すべて開く"; };
+      const changed = () => {
+        labelAll();
+        try { localStorage.setItem(FOLD_KEY, JSON.stringify(bodies.filter(isOpen).map(tb => tb.dataset.s))); } catch (e) {}
+      };
+      bodies.forEach(tb => tb.querySelector(".fold").addEventListener("click", () => { setOpen(tb, !isOpen(tb)); changed(); }));
+      foldAll.addEventListener("click", () => {
+        const on = !bodies.some(isOpen);
+        bodies.forEach(tb => setOpen(tb, on));
+        changed();
+      });
+      labelAll();
+      filters.appendChild(foldAll);
       wireFilters(bm);
+      // 絞り込んだカテゴリは開く（閉じたままだと見出しだけになるため）
+      bm.querySelectorAll(".filter").forEach(b => b.addEventListener("click", () => {
+        const tb = bodies.find(x => x.dataset.s === b.dataset.f);
+        if (tb && !isOpen(tb)) { setOpen(tb, true); changed(); }
+      }));
     };
     fetch("data/x_bookmarks.json", {cache: "no-cache"})
       .then(r => r.status === 404 ? null : r.ok ? r.json() : Promise.reject(new Error("HTTP " + r.status)))
