@@ -53,6 +53,14 @@
   tr.done td { color: var(--muted); }
   tr.done .tx { text-decoration: line-through; }
   tr.done .ck { color: var(--s4); font-weight: 600; margin-right: 4px; }
+  .cb { margin-right: 6px; vertical-align: -1px; cursor: pointer; }
+  .check-msg { font-size: 12.5px; color: var(--s6); margin-bottom: 8px; }
+  .key-form { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; font-size: 12.5px; color: var(--ink-2);
+    background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 8px 12px; margin-bottom: 10px; }
+  .key-form input { font: inherit; flex: 1 1 16em; min-width: 0; padding: 3px 8px; color: var(--ink); background: var(--page);
+    border: 1px solid var(--border); border-radius: 6px; }
+  .key-form button { font: inherit; color: var(--ink); background: var(--wash); border: 1px solid var(--border);
+    border-radius: 6px; padding: 3px 12px; cursor: pointer; }
   .wk th.du { width: 6.6em; }
   .wk th.no { width: 4.4em; }
   .filters { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
@@ -121,7 +129,7 @@
 <header>
   <h1>AI管理のTODO</h1>
   <span class="count">TODO 14件 ／ やりたい事 6件 ／ 備忘録 1件 ／ X Bookmark <span id="n-bm">…</span>件</span>
-  <span class="asof">最終更新 2026/11/05 17:15</span>
+  <span class="asof">最終更新 2026/11/05 18:09</span>
 </header>
 <p class="lead">「やる必要があること（TODO）」と「いつかやりたい事」、覚えておきたい「備忘録」、Xでブックマークした投稿の一覧。X BookmarkはGrok Bot、ほかはClaude/Codexが更新しています。</p>
 <div class="tabs" role="tablist" aria-label="種類">
@@ -130,7 +138,7 @@
   <button type="button" class="tab" role="tab" id="tab-memo" aria-controls="panel-memo" aria-selected="false" data-tab="memo" tabindex="-1">備忘録<span class="n">1</span></button>
   <button type="button" class="tab" role="tab" id="tab-bookmark" aria-controls="panel-bookmark" aria-selected="false" data-tab="bookmark" tabindex="-1">X Bookmark<span class="n" id="tab-n-bm">…</span></button>
 </div>
-<section class="panel" id="panel-todo" role="tabpanel" aria-labelledby="tab-todo"><div class="views" role="group" aria-label="表示"><button type="button" class="view on" data-view="cat" aria-pressed="true">カテゴリ別</button><button type="button" class="view" data-view="due" aria-pressed="false">期限別</button></div><div class="view-cat"><div class="filters"><button class="filter on" data-f="">すべて <b>14</b></button><button class="filter" data-f="ADMIN">ADMIN <b>3</b></button><button class="filter" data-f="生活">生活 <b>6</b></button><button class="filter" data-f="AI関連">AI関連 <b>3</b></button><button class="filter" data-f="株関連">株関連 <b>1</b></button><button class="filter" data-f="クリプト関連">クリプト関連 <b>1</b></button></div><table id="todo"><thead><tr><th class="t">タイトル</th><th class="m">メモ</th><th class="du">期限</th><th class="no">No.</th></tr></thead><tbody data-s="ADMIN"><tr class="subhead"><th colspan="4"><span class="code">0</span>ADMIN <span class="n">3</span></th></tr><tr data-due=""><td class="t">不要サイトの登録内容変更</td><td class="m">セキュリティ対策</td><td class="du"></td><td class="no">0-1</td></tr><tr data-due="2026-11-04"><td class="t">みずほ証券</td><td class="m"></td><td class="du">11/4</td><td class="no">0-2</td></tr><tr data-due="2026-11-05"><td class="t">10月振り返り</td><td class="m"></td><td class="du">11/5</td><td class="no">0-3</td></tr></tbody><tbody data-s="生活"><tr class="subhead"><th colspan="4"><span class="code">1</span>生活 <span class="n">6</span></th></tr><tr data-due=""><td class="t">時計の選定</td><td class="m"></td><td class="du"></td><td class="no">1-2</td></tr><tr data-due=""><td class="t">秋服の選定</td><td class="m"></td><td class="du"></td><td class="no">1-3</td></tr><tr data-due="2026-11-05"><td class="t">鞄・時計見る</td><td class="m"></td><td class="du">11/5</td><td class="no">1-7</td></tr><tr data-due="2026-11-06"><td class="t">【11-】ひげ、乳首、へそ脱毛</td><td class="m"></td><td class="du">11/6</td><td class="no">1-8</td></tr><tr data-due="2026-11-06"><td class="t">【15-】歯医者</td><td class="m"></td><td class="du">11/6</td><td class="no">1-9</td></tr><tr data-due="2026-11-07"><td class="t">運動会</td><td class="m"></td><td class="du">11/7</td><td class="no">1-10</td></tr><tr class="done" data-due="2026-11-02" data-closed="2026-11-05"><td class="t"><span class="ck">✓</span><span class="tx">【1145-】鼻毛脱毛</span></td><td class="m"></td><td class="du">11/2</td><td class="no">1-11</td></tr><tr class="done" data-due="2026-11-04" data-closed="2026-11-05"><td class="t"><span class="ck">✓</span><span class="tx">椅子の組み立て</span></td><td class="m"></td><td class="du">11/4</td><td class="no">1-12</td></tr><tr class="done" data-due="2026-11-04" data-closed="2026-11-05"><td class="t"><span class="ck">✓</span><span class="tx">【11-】下半身脱毛</span></td><td class="m"></td><td class="du">11/4</td><td class="no">1-13</td></tr></tbody><tbody data-s="AI関連"><tr class="subhead"><th colspan="4"><span class="code">2</span>AI関連 <span class="n">3</span></th></tr><tr data-due=""><td class="t">LAN配信サイトの整理</td><td class="m"></td><td class="du"></td><td class="no">2-1</td></tr><tr data-due=""><td class="t">AIによるサイト更新監視</td><td class="m">テニス・学校などが候補</td><td class="du"></td><td class="no">2-5</td></tr><tr data-due="2026-11-05"><td class="t">AIでやることやらないこと決める</td><td class="m"></td><td class="du">11/5</td><td class="no">2-6</td></tr></tbody><tbody data-s="株関連"><tr class="subhead"><th colspan="4"><span class="code">3</span>株関連 <span class="n">1</span></th></tr><tr data-due=""><td class="t">株の取引履歴の整備</td><td class="m"></td><td class="du"></td><td class="no">3-1</td></tr></tbody><tbody data-s="クリプト関連"><tr class="subhead"><th colspan="4"><span class="code">4</span>クリプト関連 <span class="n">1</span></th></tr><tr data-due=""><td class="t">クリプトの取引履歴の整備</td><td class="m"></td><td class="du"></td><td class="no">4-1</td></tr></tbody></table></div><div class="view-due" hidden></div></section><section class="panel" id="panel-wish" role="tabpanel" aria-labelledby="tab-wish" hidden><div class="filters"><button class="filter on" data-f="">すべて <b>6</b></button><button class="filter" data-f="生活">生活 <b>2</b></button><button class="filter" data-f="株関連">株関連 <b>3</b></button><button class="filter" data-f="クリプト関連">クリプト関連 <b>1</b></button></div><table id="wish"><thead><tr><th class="no">No.</th><th class="d sort" data-k="d">登録日</th><th class="t">タイトル</th><th class="m">メモ</th></tr></thead><tbody data-s="生活"><tr class="subhead"><th colspan="4"><span class="code">1</span>生活 <span class="n">2</span></th></tr><tr data-d="2026-10-17T21:44:06+09:00"><td class="no">1-5</td><td class="d"><span class="date">2026/10/17</span></td><td class="t">2027年M1に出る</td><td class="m"></td></tr><tr data-d="2026-10-24T23:07:44+09:00"><td class="no">1-6</td><td class="d"><span class="date">2026/10/24</span></td><td class="t">NOT A HOTELに泊まる</td><td class="m"></td></tr></tbody><tbody data-s="株関連"><tr class="subhead"><th colspan="4"><span class="code">3</span>株関連 <span class="n">3</span></th></tr><tr data-d="2026-10-17T13:37:02+09:00"><td class="no">3-2</td><td class="d"><span class="date">2026/10/17</span></td><td class="t">寄り前ノートの再検討</td><td class="m">Grokのツイッターまとめと合わせて作る</td></tr><tr data-d="2026-10-17T13:37:04+09:00"><td class="no">3-3</td><td class="d"><span class="date">2026/10/17</span></td><td class="t">TAKANE活用</td><td class="m">BOT発注</td></tr><tr data-d="2026-10-17T13:37:05+09:00"><td class="no">3-4</td><td class="d"><span class="date">2026/10/17</span></td><td class="t">トラッカーの集約</td><td class="m">200Aだけでなく、いろいろなものをSKHYのようにトラックする</td></tr></tbody><tbody data-s="クリプト関連"><tr class="subhead"><th colspan="4"><span class="code">4</span>クリプト関連 <span class="n">1</span></th></tr><tr data-d="2026-10-17T13:37:06+09:00"><td class="no">4-2</td><td class="d"><span class="date">2026/10/17</span></td><td class="t">DEXマーケットトラッカーの改良</td><td class="m">使えるもの・どう使うかを検討</td></tr></tbody></table></section><section class="panel" id="panel-memo" role="tabpanel" aria-labelledby="tab-memo" hidden><div class="filters"><button class="filter on" data-f="">すべて <b>1</b></button><button class="filter" data-f="買い物">買い物 <b>1</b></button></div><table id="memo"><thead><tr><th class="d sort" data-k="d">登録日</th><th class="g">タグ</th><th class="c">内容</th></tr></thead><tbody><tr data-d="2026-10-28T22:39:26+09:00" data-tags="買い物"><td class="d"><span class="date">2026/10/28</span></td><td class="g"><span class="tag">買い物</span></td><td class="c">11月になったらオムツ、ティッシュ、水を買う</td></tr></tbody></table></section><section class="panel" id="panel-bookmark" role="tabpanel" aria-labelledby="tab-bookmark" data-order="desc" hidden><div class="filters"></div><table id="bookmark"><thead><tr><th class="d sort" data-k="d">登録日</th><th class="t">タイトル</th><th class="c">内容</th></tr></thead><tbody><tr class="empty"><td colspan="3">読み込み中…</td></tr></tbody></table></section>
+<section class="panel" id="panel-todo" role="tabpanel" aria-labelledby="tab-todo"><div class="views" role="group" aria-label="表示"><button type="button" class="view on" data-view="cat" aria-pressed="true">カテゴリ別</button><button type="button" class="view" data-view="due" aria-pressed="false">期限別</button></div><div class="view-cat"><div class="filters"><button class="filter on" data-f="">すべて <b>14</b></button><button class="filter" data-f="ADMIN">ADMIN <b>3</b></button><button class="filter" data-f="生活">生活 <b>6</b></button><button class="filter" data-f="AI関連">AI関連 <b>3</b></button><button class="filter" data-f="株関連">株関連 <b>1</b></button><button class="filter" data-f="クリプト関連">クリプト関連 <b>1</b></button></div><table id="todo"><thead><tr><th class="t">タイトル</th><th class="m">メモ</th><th class="du">期限</th><th class="no">No.</th></tr></thead><tbody data-s="ADMIN"><tr class="subhead"><th colspan="4"><span class="code">0</span>ADMIN <span class="n">3</span></th></tr><tr data-id="4" data-due=""><td class="t">不要サイトの登録内容変更</td><td class="m">セキュリティ対策</td><td class="du"></td><td class="no">0-1</td></tr><tr data-id="20" data-due="2026-11-04"><td class="t">みずほ証券</td><td class="m"></td><td class="du">11/4</td><td class="no">0-2</td></tr><tr data-id="23" data-due="2026-11-05"><td class="t">10月振り返り</td><td class="m"></td><td class="du">11/5</td><td class="no">0-3</td></tr></tbody><tbody data-s="生活"><tr class="subhead"><th colspan="4"><span class="code">1</span>生活 <span class="n">6</span></th></tr><tr data-id="7" data-due=""><td class="t">時計の選定</td><td class="m"></td><td class="du"></td><td class="no">1-2</td></tr><tr data-id="8" data-due=""><td class="t">秋服の選定</td><td class="m"></td><td class="du"></td><td class="no">1-3</td></tr><tr data-id="21" data-due="2026-11-05"><td class="t">鞄・時計見る</td><td class="m"></td><td class="du">11/5</td><td class="no">1-7</td></tr><tr data-id="24" data-due="2026-11-06"><td class="t">【11-】ひげ、乳首、へそ脱毛</td><td class="m"></td><td class="du">11/6</td><td class="no">1-8</td></tr><tr data-id="25" data-due="2026-11-06"><td class="t">【15-】歯医者</td><td class="m"></td><td class="du">11/6</td><td class="no">1-9</td></tr><tr data-id="26" data-due="2026-11-07"><td class="t">運動会</td><td class="m"></td><td class="du">11/7</td><td class="no">1-10</td></tr><tr class="done" data-id="27" data-due="2026-11-02" data-closed="2026-11-05"><td class="t"><span class="ck">✓</span><span class="tx">【1145-】鼻毛脱毛</span></td><td class="m"></td><td class="du">11/2</td><td class="no">1-11</td></tr><tr class="done" data-id="28" data-due="2026-11-04" data-closed="2026-11-05"><td class="t"><span class="ck">✓</span><span class="tx">椅子の組み立て</span></td><td class="m"></td><td class="du">11/4</td><td class="no">1-12</td></tr><tr class="done" data-id="29" data-due="2026-11-04" data-closed="2026-11-05"><td class="t"><span class="ck">✓</span><span class="tx">【11-】下半身脱毛</span></td><td class="m"></td><td class="du">11/4</td><td class="no">1-13</td></tr></tbody><tbody data-s="AI関連"><tr class="subhead"><th colspan="4"><span class="code">2</span>AI関連 <span class="n">3</span></th></tr><tr data-id="9" data-due=""><td class="t">LAN配信サイトの整理</td><td class="m"></td><td class="du"></td><td class="no">2-1</td></tr><tr data-id="17" data-due=""><td class="t">AIによるサイト更新監視</td><td class="m">テニス・学校などが候補</td><td class="du"></td><td class="no">2-5</td></tr><tr data-id="22" data-due="2026-11-05"><td class="t">AIでやることやらないこと決める</td><td class="m"></td><td class="du">11/5</td><td class="no">2-6</td></tr></tbody><tbody data-s="株関連"><tr class="subhead"><th colspan="4"><span class="code">3</span>株関連 <span class="n">1</span></th></tr><tr data-id="5" data-due=""><td class="t">株の取引履歴の整備</td><td class="m"></td><td class="du"></td><td class="no">3-1</td></tr></tbody><tbody data-s="クリプト関連"><tr class="subhead"><th colspan="4"><span class="code">4</span>クリプト関連 <span class="n">1</span></th></tr><tr data-id="6" data-due=""><td class="t">クリプトの取引履歴の整備</td><td class="m"></td><td class="du"></td><td class="no">4-1</td></tr></tbody></table></div><div class="view-due" hidden></div></section><section class="panel" id="panel-wish" role="tabpanel" aria-labelledby="tab-wish" hidden><div class="filters"><button class="filter on" data-f="">すべて <b>6</b></button><button class="filter" data-f="生活">生活 <b>2</b></button><button class="filter" data-f="株関連">株関連 <b>3</b></button><button class="filter" data-f="クリプト関連">クリプト関連 <b>1</b></button></div><table id="wish"><thead><tr><th class="no">No.</th><th class="d sort" data-k="d">登録日</th><th class="t">タイトル</th><th class="m">メモ</th></tr></thead><tbody data-s="生活"><tr class="subhead"><th colspan="4"><span class="code">1</span>生活 <span class="n">2</span></th></tr><tr data-d="2026-10-17T21:44:06+09:00"><td class="no">1-5</td><td class="d"><span class="date">2026/10/17</span></td><td class="t">2027年M1に出る</td><td class="m"></td></tr><tr data-d="2026-10-24T23:07:44+09:00"><td class="no">1-6</td><td class="d"><span class="date">2026/10/24</span></td><td class="t">NOT A HOTELに泊まる</td><td class="m"></td></tr></tbody><tbody data-s="株関連"><tr class="subhead"><th colspan="4"><span class="code">3</span>株関連 <span class="n">3</span></th></tr><tr data-d="2026-10-17T13:37:02+09:00"><td class="no">3-2</td><td class="d"><span class="date">2026/10/17</span></td><td class="t">寄り前ノートの再検討</td><td class="m">Grokのツイッターまとめと合わせて作る</td></tr><tr data-d="2026-10-17T13:37:04+09:00"><td class="no">3-3</td><td class="d"><span class="date">2026/10/17</span></td><td class="t">TAKANE活用</td><td class="m">BOT発注</td></tr><tr data-d="2026-10-17T13:37:05+09:00"><td class="no">3-4</td><td class="d"><span class="date">2026/10/17</span></td><td class="t">トラッカーの集約</td><td class="m">200Aだけでなく、いろいろなものをSKHYのようにトラックする</td></tr></tbody><tbody data-s="クリプト関連"><tr class="subhead"><th colspan="4"><span class="code">4</span>クリプト関連 <span class="n">1</span></th></tr><tr data-d="2026-10-17T13:37:06+09:00"><td class="no">4-2</td><td class="d"><span class="date">2026/10/17</span></td><td class="t">DEXマーケットトラッカーの改良</td><td class="m">使えるもの・どう使うかを検討</td></tr></tbody></table></section><section class="panel" id="panel-memo" role="tabpanel" aria-labelledby="tab-memo" hidden><div class="filters"><button class="filter on" data-f="">すべて <b>1</b></button><button class="filter" data-f="買い物">買い物 <b>1</b></button></div><table id="memo"><thead><tr><th class="d sort" data-k="d">登録日</th><th class="g">タグ</th><th class="c">内容</th></tr></thead><tbody><tr data-d="2026-10-28T22:39:26+09:00" data-tags="買い物"><td class="d"><span class="date">2026/10/28</span></td><td class="g"><span class="tag">買い物</span></td><td class="c">11月になったらオムツ、ティッシュ、水を買う</td></tr></tbody></table></section><section class="panel" id="panel-bookmark" role="tabpanel" aria-labelledby="tab-bookmark" data-order="desc" hidden><div class="filters"></div><table id="bookmark"><thead><tr><th class="d sort" data-k="d">登録日</th><th class="t">タイトル</th><th class="c">内容</th></tr></thead><tbody><tr class="empty"><td colspan="3">読み込み中…</td></tr></tbody></table></section>
 </main>
 <script>
 (() => {
@@ -388,6 +396,114 @@
       .then(r => r.status === 404 ? null : r.ok ? r.json() : Promise.reject(new Error("HTTP " + r.status)))
       .then(render)
       .catch(() => { setCount("?"); message("読み込めませんでした。時間をおいて開き直してください"); });
+  }
+  // チェックボタン: 鍵（GitHubのトークン）を入れたブラウザにだけ出る。鍵はURLの #key で開く欄から入れ、このブラウザの中だけに保存する。
+  // 押すと非公開リポジトリの checks.json に追記し、Macが数分おきに正本へ取り込む。鍵を送る先は GitHub のAPIだけ
+  const CHECKS_API = "https://api.github.com/repos/oressk/ai-todo-checks/contents/checks.json";
+  const KEY_NAME = "ai-todo-key";
+  let checkKey = "";
+  try { checkKey = localStorage.getItem(KEY_NAME) || ""; } catch (e) {}
+  const checkMsg = make("p", "check-msg");
+  checkMsg.setAttribute("role", "status"); checkMsg.hidden = true;
+  todoPanel.insertBefore(checkMsg, todoPanel.querySelector(".view-cat"));
+  const say = text => { checkMsg.textContent = text; checkMsg.hidden = !text; };
+  const github = (token, opts) => fetch(CHECKS_API, Object.assign({cache: "no-store"}, opts, {
+    headers: {Authorization: "Bearer " + token, Accept: "application/vnd.github+json", "Content-Type": "application/json"}}));
+  const toB64 = text => {
+    let s = "";
+    new TextEncoder().encode(text).forEach(b => { s += String.fromCharCode(b); });
+    return btoa(s);
+  };
+  const fromB64 = b64 => new TextDecoder().decode(Uint8Array.from(atob(b64.replace(/\s/g, "")), c => c.charCodeAt(0)));
+  const readChecks = async () => {
+    const r = await github(checkKey);
+    if (!r.ok) throw new Error("HTTP " + r.status);  // 非公開リポジトリを読めない鍵は 404 になる
+    const j = await r.json(), d = JSON.parse(fromB64(j.content));
+    return {sha: j.sha, events: Array.isArray(d.events) ? d.events : []};
+  };
+  const pushEvent = async ev => {
+    for (let n = 0; n < 4; n++) {  // Macや別のPCと同時に書いたときは読み直してやり直す
+      const {sha, events} = await readChecks();
+      events.push(ev);
+      const r = await github(checkKey, {method: "PUT", body: JSON.stringify({message: "check", sha,
+        content: toB64(JSON.stringify({version: 1, events}, null, 1) + "\n")})});
+      if (r.ok) return;
+      if (r.status !== 409 && r.status !== 422) throw new Error("HTTP " + r.status);
+      await new Promise(res => setTimeout(res, 800));
+    }
+    throw new Error("conflict");
+  };
+  const rowById = id => todoPanel.querySelector('.view-cat tr[data-id="' + id + '"]');
+  const setDone = (tr, on) => {
+    tr.classList.toggle("done", on);
+    if (on) tr.dataset.closed = tr.dataset.closed || todayJst(); else delete tr.dataset.closed;
+    const cb = tr.querySelector("input.cb");
+    if (cb) cb.checked = on;
+  };
+  const recount = () => {
+    const chips = [...todoPanel.querySelectorAll(".view-cat .filter")];
+    let total = 0;
+    todoPanel.querySelectorAll(".view-cat tbody[data-s]").forEach(tb => {
+      const n = tb.querySelectorAll("tr[data-id]:not(.done)").length;
+      total += n;
+      tb.querySelector(".subhead .n").textContent = n;
+      const chip = chips.find(b => b.dataset.f === tb.dataset.s);
+      if (chip) chip.querySelector("b").textContent = n;
+    });
+    chips.find(b => !b.dataset.f).querySelector("b").textContent = total;
+    document.querySelector("#tab-todo .n").textContent = total;
+    const head = document.querySelector(".count").firstChild;
+    head.nodeValue = head.nodeValue.replace(/^TODO \d+件/, "TODO " + total + "件");
+  };
+  const refresh = () => { recount(); if (view === "due") renderDue(todoPanel.querySelector(".view-due")); };
+  const addBoxes = () => todoPanel.querySelectorAll(".view-cat tr[data-id]").forEach(tr => {
+    const td = tr.querySelector(".t"), mark = td.querySelector(".ck"), cb = make("input", "cb");
+    if (mark) mark.remove();
+    if (!td.querySelector(".tx")) { const tx = make("span", "tx", td.textContent); td.textContent = ""; td.appendChild(tx); }
+    cb.type = "checkbox"; cb.checked = tr.classList.contains("done"); cb.setAttribute("aria-label", "完了");
+    td.prepend(cb);
+  });
+  let writes = Promise.resolve();
+  todoPanel.addEventListener("change", e => {
+    if (!e.target.matches("input.cb")) return;
+    const id = Number(e.target.closest("tr").dataset.id), on = e.target.checked, src = rowById(id);
+    setDone(src, on); refresh(); say("");
+    writes = writes.then(() => pushEvent({id, done: on, at: new Date().toISOString()})).catch(err => {
+      setDone(src, !on); refresh();
+      say(/HTTP 40[134]/.test(err.message) ? "保存できませんでした。鍵が無効か期限切れです（URLの末尾を #key にすると入れ直せます）。"
+        : "保存できませんでした。通信を確認して、もう一度押してください。");
+    });
+  });
+  if (location.hash === "#key") {
+    const form = make("form", "key-form"), input = make("input"), save = make("button", null, "保存"), clear = make("button", null, "このブラウザから消す");
+    input.type = "password"; input.autocomplete = "off"; input.placeholder = "GitHubのトークン"; input.setAttribute("aria-label", "鍵");
+    save.type = "submit"; clear.type = "button";
+    form.append(make("span", null, "チェックボタンの鍵:"), input, save, clear);
+    todoPanel.insertBefore(form, todoPanel.firstChild);
+    form.addEventListener("submit", async e => {
+      e.preventDefault();
+      const token = input.value.trim();
+      if (!token) return;
+      const r = await github(token).catch(() => null);
+      if (!r || !r.ok) { say("この鍵では読めませんでした。権限と入力を確認してください。"); return; }
+      try { localStorage.setItem(KEY_NAME, token); } catch (err) { say("このブラウザには保存できません。"); return; }
+      location.hash = "#todo"; location.reload();
+    });
+    clear.addEventListener("click", () => {
+      try { localStorage.removeItem(KEY_NAME); } catch (err) {}
+      location.hash = "#todo"; location.reload();
+    });
+  }
+  if (checkKey) {
+    readChecks().then(({events}) => {
+      addBoxes();
+      // Macが取り込む前の操作と、公開ページの更新が届く前の操作を画面に重ねる
+      events.forEach(ev => { const tr = ev && rowById(Number(ev.id)); if (tr) setDone(tr, ev.done === true); });
+      refresh();
+    }).catch(err => {
+      say(/HTTP 40[134]/.test(err.message) ? "チェックボタンの鍵が無効か期限切れです（URLの末尾を #key にすると入れ直せます）。"
+        : "チェックの状態を読み込めませんでした。チェックは今は使えません。");
+    });
   }
 })();
 </script>
