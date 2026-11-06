@@ -24,17 +24,19 @@
     font-family: system-ui, -apple-system, "Segoe UI", "Hiragino Sans", sans-serif;
     font-size: 14px; line-height: 1.55; padding: 20px clamp(12px, 3vw, 36px) 48px; }
   main { max-width: 860px; margin: 0 auto; }
-  header { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 14px; margin-bottom: 4px; }
+  header { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 14px; margin-bottom: 6px; }
   h1 { font-size: 19px; font-weight: 650; }
   .count { font-size: 13px; color: var(--ink-2); }
-  .asof { margin-left: auto; font-size: 12px; color: var(--muted); }
+  .asof-row { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+  .asof { font-size: 12px; color: var(--muted); }
+  h1.ttl { display: flex; align-items: center; gap: 8px; }
+  .ttl img { flex: none; width: 22px; height: 22px; }
   .hub { flex: none; display: flex; gap: 4px; }
   .hub a { display: block; padding: 3px; border-radius: 8px; line-height: 0; }
   .hub a:hover { background: var(--grid); }
   .hub a:focus-visible { outline: 2px solid var(--s1); outline-offset: 1px; }
   .hub img { display: block; width: 26px; height: 26px; }
-  .lead-row { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
-  .lead { flex: 1 1 auto; min-width: 0; font-size: 12.5px; color: var(--muted); }
+  .lead { font-size: 12.5px; color: var(--muted); margin-bottom: 14px; }
   .tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--grid); margin: 0 0 12px; }
   .tab { font: inherit; font-size: 14px; font-weight: 600; color: var(--ink-2); background: none; border: none;
     border-bottom: 2px solid transparent; margin-bottom: -1px; padding: 6px 14px; cursor: pointer; }
@@ -131,11 +133,11 @@
 <body>
 <main>
 <header>
-  <h1>タスク管理</h1>
+  <h1 class="ttl"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='3' fill='%231baf7a'/%3E%3Cpath d='M4 8.5l2.5 2.5L12 5.5' stroke='white' stroke-width='2' fill='none'/%3E%3C/svg%3E" alt="">タスク管理</h1>
   <span class="count">TODO 21件 ／ やりたい事 6件 ／ 備忘録 1件 ／ X Bookmark <span id="n-bm">…</span>件</span>
-  <span class="asof">最終更新 2026/11/06 16:57</span>
+  <div class="asof-row"><span class="asof">最終更新 2026/11/06 17:00</span><nav class="hub" aria-label="ほかの管理ページ"><a href="http://mac-mini.local:8789/" title="AIシステム管理（自宅LAN内）" aria-label="AIシステム管理"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='3' fill='%237c3aed'/%3E%3Ctext x='8' y='12.4' text-anchor='middle' font-family='Arial,Helvetica,sans-serif' font-size='12.5' font-weight='700' fill='white'%3ES%3C/text%3E%3C/svg%3E" alt=""></a><a href="http://mac-mini.local:8789/projects/" title="プロジェクト管理（自宅LAN内）" aria-label="プロジェクト管理"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='3' fill='%232563eb'/%3E%3Ctext x='8' y='12.4' text-anchor='middle' font-family='Arial,Helvetica,sans-serif' font-size='12.5' font-weight='700' fill='white'%3EP%3C/text%3E%3C/svg%3E" alt=""></a></nav></div>
 </header>
-<div class="lead-row"><p class="lead">「やる必要があること（TODO）」と「いつかやりたい事」、覚えておきたい「備忘録」、Xでブックマークした投稿の一覧。X BookmarkはGrok Bot、ほかはClaude/Codexが更新しています。</p><nav class="hub" aria-label="ほかの管理ページ"><a href="http://mac-mini.local:8789/" title="AIシステム管理（自宅LAN内）" aria-label="AIシステム管理"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='3' fill='%237c3aed'/%3E%3Ctext x='8' y='12.4' text-anchor='middle' font-family='Arial,Helvetica,sans-serif' font-size='12.5' font-weight='700' fill='white'%3ES%3C/text%3E%3C/svg%3E" alt=""></a><a href="http://mac-mini.local:8789/projects/" title="プロジェクト管理（自宅LAN内）" aria-label="プロジェクト管理"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='3' fill='%232563eb'/%3E%3Ctext x='8' y='12.4' text-anchor='middle' font-family='Arial,Helvetica,sans-serif' font-size='12.5' font-weight='700' fill='white'%3EP%3C/text%3E%3C/svg%3E" alt=""></a></nav></div>
+<p class="lead">「やる必要があること（TODO）」と「いつかやりたい事」、覚えておきたい「備忘録」、Xでブックマークした投稿の一覧。X BookmarkはGrok Bot、ほかはClaude/Codexが更新しています。</p>
 <div class="tabs" role="tablist" aria-label="種類">
   <button type="button" class="tab" role="tab" id="tab-todo" aria-controls="panel-todo" aria-selected="true" data-tab="todo">TODO<span class="n">21</span></button>
   <button type="button" class="tab" role="tab" id="tab-wish" aria-controls="panel-wish" aria-selected="false" data-tab="wish" tabindex="-1">やりたい事<span class="n">6</span></button>
