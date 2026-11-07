@@ -1,6 +1,6 @@
 {
  "schema_version": 1,
- "updated_at": "2026-11-07T07:42:04+09:00",
+ "updated_at": "2026-11-08T07:47:50+09:00",
  "categories": [
   "要状況観察",
   "AI関連",
@@ -13,14 +13,24 @@
  ],
  "items": [
   {
-   "id": "2118162278709387643",
-   "url": "https://x.com/serotape_take/status/2118162278709387643",
-   "author": "@serotape_take",
-   "posted_at": "2026-11-05T11:03:35+09:00",
-   "title": "半導体株を買い込んでリバ勝負",
-   "summary": "キオクシア、第一工業製薬、イビデン、古河など半導体関連株をまとめて買い込んだという投稿。リバウンド狙いで実力試しだとしている。",
-   "category": "株関連",
-   "found_at": "2026-11-06T19:42:51+09:00"
+   "id": "2119094670638944456",
+   "url": "https://x.com/kuzyofire/status/2119094670638944456",
+   "author": "@kuzyofire",
+   "posted_at": "2026-11-08T00:48:35+09:00",
+   "title": "MuseでGrok連携が拡大",
+   "summary": "MuseクラウドPCにClaude CodeやGrok Botを入れて連携できる事例を引用。作者は司令官とAIエージェントの住処としてMuseを検討している。",
+   "category": "AI関連",
+   "found_at": "2026-11-08T07:47:50+09:00"
+  },
+  {
+   "id": "2119022128720986146",
+   "url": "https://x.com/kyouchan0000/status/2119022128720986146",
+   "author": "@kyouchan0000",
+   "posted_at": "2026-11-07T20:00:19+09:00",
+   "title": "VIVANT阿部寛の牢屋ネタ",
+   "summary": "ドラマVIVANTの阿部寛の「牢屋に入りたくなかった」台詞を挙げ、実際は長く入っていたとからかう動画付きのネタ投稿。",
+   "category": "読み物・話題",
+   "found_at": "2026-11-08T07:47:50+09:00"
   },
   {
    "id": "2033189658109325624",
@@ -959,16 +969,6 @@
    "posted_at": "2026-03-06T02:03:01+09:00",
    "title": "AGENTS.mdを目次にしdocsを記録の正本に",
    "summary": "AGENTS.mdに進捗メモを強制しても最新しか読まれず、設計方針も埋もれて参照されなかったという悩みに対し、AGENTS.mdを目次にして構造化したdocs/を正式な記録にする方法を紹介するQiita記事が参考になったという投稿。",
-   "found_at": "2026-11-01T07:46:54+09:00",
-   "category": "AI関連"
-  },
-  {
-   "id": "2029153039018586533",
-   "url": "https://x.com/coinkeiba/status/2029153039018586533",
-   "author": "@coinkeiba",
-   "posted_at": "2026-03-04T20:12:38+09:00",
-   "title": "freee×Claudeで経理を自動化",
-   "summary": "freee APIで未処理取引を取得し、Claudeが勘定科目を判定、自信のあるものは自動確定し不明なものはLINEやDiscordで確認、Google Driveの領収書を日付と金額で自動紐付けし、完了レポートをLINEに送る仕組みを作ったという紹介。",
    "found_at": "2026-11-01T07:46:54+09:00",
    "category": "AI関連"
   },
