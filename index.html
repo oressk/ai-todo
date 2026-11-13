@@ -135,7 +135,7 @@
 <header>
   <h1 class="ttl"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='3' fill='%231baf7a'/%3E%3Cpath d='M4 8.5l2.5 2.5L12 5.5' stroke='white' stroke-width='2' fill='none'/%3E%3C/svg%3E" alt="">タスク管理</h1>
   <span class="count">TODO 22件 ／ やりたい事 6件 ／ 備忘録 1件 ／ X Bookmark <span id="n-bm">…</span>件</span>
-  <div class="asof-row"><span class="asof">最終更新 2026/11/13 14:41</span><nav class="hub" aria-label="ほかの管理ページ"><a href="http://192.168.1.81:8789/" title="AIシステム管理（自宅LAN内）" aria-label="AIシステム管理"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='3' fill='%237c3aed'/%3E%3Ctext x='8' y='12.4' text-anchor='middle' font-family='Arial,Helvetica,sans-serif' font-size='12.5' font-weight='700' fill='white'%3ES%3C/text%3E%3C/svg%3E" alt=""></a><a href="http://192.168.1.81:8789/projects/" title="プロジェクト管理（自宅LAN内）" aria-label="プロジェクト管理"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='3' fill='%232563eb'/%3E%3Ctext x='8' y='12.4' text-anchor='middle' font-family='Arial,Helvetica,sans-serif' font-size='12.5' font-weight='700' fill='white'%3EP%3C/text%3E%3C/svg%3E" alt=""></a></nav></div>
+  <div class="asof-row"><span class="asof">最終更新 2026/11/13 14:45</span><nav class="hub" aria-label="ほかの管理ページ"><a href="http://192.168.1.81:8789/" title="AIシステム管理（自宅LAN内）" aria-label="AIシステム管理"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='3' fill='%237c3aed'/%3E%3Ctext x='8' y='12.4' text-anchor='middle' font-family='Arial,Helvetica,sans-serif' font-size='12.5' font-weight='700' fill='white'%3ES%3C/text%3E%3C/svg%3E" alt=""></a><a href="http://192.168.1.81:8789/projects/" title="プロジェクト管理（自宅LAN内）" aria-label="プロジェクト管理"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='3' fill='%232563eb'/%3E%3Ctext x='8' y='12.4' text-anchor='middle' font-family='Arial,Helvetica,sans-serif' font-size='12.5' font-weight='700' fill='white'%3EP%3C/text%3E%3C/svg%3E" alt=""></a></nav></div>
 </header>
 <p class="lead">「やる必要があること（TODO）」と「いつかやりたい事」、覚えておきたい「備忘録」、Xでブックマークした投稿の一覧。X BookmarkはGrok Bot、ほかはClaude/Codexが更新しています。</p>
 <div class="tabs" role="tablist" aria-label="種類">
@@ -161,13 +161,15 @@
   // 殿の指定（2026-11-05）は月曜0時に「未実施を翌週の週末へ→翌週を今週へ」の順なので、切替後の見え方は今週の週末になる。
   // 完了項目は持ち越さない。期限が今週より前なら完了した日の欄に置く。
   // 前の週までに完了した項目は出さない（月曜0時に完了記録へ移る分。古いページを月曜に並べ直すと、以前は今週の月曜に出ていた。2026-11-09 殿の指摘）
+  // 依頼中のカテゴリ（r.req にカテゴリ名。名前が「依頼中」で終わるもの）の項目は、期限に関係なく「依頼中」のカードへ（2026-11-13 殿の指定）
   const dueBuckets = (rows, today) => {
     const starts = [mondayOf(today), addDays(mondayOf(today), 7)];
     const end = addDays(starts[1], 7);
-    const b = {weeks: starts.map(start => ({start, days: [[], [], [], [], [], []]})), later: [], none: []};
+    const b = {weeks: starts.map(start => ({start, days: [[], [], [], [], [], []]})), later: [], none: [], req: []};
     const past = [];
     rows.forEach(r => {
       if (r.closed && r.closed < starts[0]) return;
+      if (r.req) { b.req.push(r); return; }
       let when = r.due;
       if (r.closed && when && when < starts[0]) when = r.closed;
       if (!when) b.none.push(r);
@@ -210,9 +212,13 @@
   };
   const weekTitle = iso => Number(iso.slice(5, 7)) + "月" + Number(iso.slice(8, 10)) + "日週";
   const todoPanel = document.getElementById("panel-todo");
-  // OneNoteの週次ページと同じ形: 左に今週、右に翌週、翌週の下に以降（2026-11-05 殿の指定）
+  // OneNoteの週次ページと同じ形: 左に今週、右に翌週、翌週の下に以降（2026-11-05 殿の指定）。以降の下に依頼中（2026-11-13 殿の指定）
+  const REQUEST = /依頼中$/;  // このカテゴリの項目は「依頼中」のカードに、カテゴリごとの見出し（■妻依頼中 など）で出す
   const renderDue = box => {
-    const rows = [...todoPanel.querySelectorAll(".view-cat tr[data-due]")].map(tr => ({due: tr.dataset.due, closed: tr.dataset.closed || "", tr}));
+    const rows = [...todoPanel.querySelectorAll(".view-cat tr[data-due]")].map(tr => {
+      const sec = tr.closest("tbody").dataset.s || "";
+      return {due: tr.dataset.due, closed: tr.dataset.closed || "", req: REQUEST.test(sec) ? sec : "", tr};
+    });
     const b = dueBuckets(rows, todayJst());
     const week = (w, tag) => weekBlock(weekTitle(w.start), tag, w.days.map((d, i) => [DAY_NAMES[i], d]));
     const left = make("div", "wk-col"), right = make("div", "wk-col"), grid = make("div", "weeks");
@@ -222,6 +228,9 @@
     if (b.later.length) later.push(["■翌々週以降", b.later]);
     if (b.none.length) later.push(["■実施日未定", b.none]);
     if (later.length) right.appendChild(weekBlock("以降", null, later));
+    const req = new Map();  // カテゴリ別の表の並び（カテゴリ番号順→項目番号順）のまま
+    b.req.forEach(r => { if (!req.has(r.req)) req.set(r.req, []); req.get(r.req).push(r); });
+    if (req.size) right.appendChild(weekBlock("依頼中", null, [...req].map(([sec, rs]) => ["■" + sec, rs])));
     grid.append(left, right);
     box.replaceChildren(grid);
   };
