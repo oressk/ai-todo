@@ -63,6 +63,8 @@
   tr.done .ck { color: var(--s4); font-weight: 600; margin-right: 4px; }
   .cb { margin-right: 6px; vertical-align: -1px; cursor: pointer; }
   .check-msg { font-size: 12.5px; color: var(--s6); margin-bottom: 8px; }
+  .newer { font: inherit; font-size: 12px; color: var(--s1); background: var(--wash); border: 1px solid var(--border);
+    border-radius: 6px; padding: 1px 8px; cursor: pointer; }
   .key-form { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; font-size: 12.5px; color: var(--ink-2);
     background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 8px 12px; margin-bottom: 10px; }
   .key-form input { font: inherit; flex: 1 1 16em; min-width: 0; padding: 3px 8px; color: var(--ink); background: var(--page);
@@ -135,7 +137,7 @@
 <header>
   <h1 class="ttl"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='3' fill='%231baf7a'/%3E%3Cpath d='M4 8.5l2.5 2.5L12 5.5' stroke='white' stroke-width='2' fill='none'/%3E%3C/svg%3E" alt="">タスク管理</h1>
   <span class="count">TODO 29件 ／ やりたい事 10件 ／ 備忘録 1件 ／ X Bookmark <span id="n-bm">…</span>件</span>
-  <div class="asof-row"><span class="asof">最終更新 2026/11/13 19:00</span><nav class="hub" aria-label="ほかの管理ページ"><a href="http://192.168.1.81:8789/" title="AIシステム管理（自宅LAN内）" aria-label="AIシステム管理"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='3' fill='%237c3aed'/%3E%3Ctext x='8' y='12.4' text-anchor='middle' font-family='Arial,Helvetica,sans-serif' font-size='12.5' font-weight='700' fill='white'%3ES%3C/text%3E%3C/svg%3E" alt=""></a><a href="http://192.168.1.81:8789/projects/" title="プロジェクト管理（自宅LAN内）" aria-label="プロジェクト管理"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='3' fill='%232563eb'/%3E%3Ctext x='8' y='12.4' text-anchor='middle' font-family='Arial,Helvetica,sans-serif' font-size='12.5' font-weight='700' fill='white'%3EP%3C/text%3E%3C/svg%3E" alt=""></a></nav></div>
+  <div class="asof-row"><span class="asof" data-v="2026-11-13T22:41:12.694+09:00">最終更新 2026/11/13 22:41</span><nav class="hub" aria-label="ほかの管理ページ"><a href="http://192.168.1.81:8789/" title="AIシステム管理（自宅LAN内）" aria-label="AIシステム管理"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='3' fill='%237c3aed'/%3E%3Ctext x='8' y='12.4' text-anchor='middle' font-family='Arial,Helvetica,sans-serif' font-size='12.5' font-weight='700' fill='white'%3ES%3C/text%3E%3C/svg%3E" alt=""></a><a href="http://192.168.1.81:8789/projects/" title="プロジェクト管理（自宅LAN内）" aria-label="プロジェクト管理"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='3' fill='%232563eb'/%3E%3Ctext x='8' y='12.4' text-anchor='middle' font-family='Arial,Helvetica,sans-serif' font-size='12.5' font-weight='700' fill='white'%3EP%3C/text%3E%3C/svg%3E" alt=""></a></nav></div>
 </header>
 <p class="lead">「やる必要があること（TODO）」と「いつかやりたい事」、覚えておきたい「備忘録」、Xでブックマークした投稿の一覧。X BookmarkはGrok Bot、ほかはClaude/Codexが更新しています。</p>
 <div class="tabs" role="tablist" aria-label="種類">
@@ -288,11 +290,72 @@
   // 開いたまま日付が変わったタブは、次に表示したときと表示を切り替えたときに読み直す。
   // 古い一覧を新しい日付で並べ直さないため（2026-11-09 殿の指摘）
   const openedDay = todayJst();
+  let writing = 0;  // チェックの送信中の数。送り終えるまで読み直さない（読み直すと送信が途切れるため）
   function reloadIfStale() {
-    if (document.visibilityState === "visible" && todayJst() !== openedDay) location.reload();
+    if (document.visibilityState !== "visible" || todayJst() === openedDay) return;
+    if (writing > 0 || location.hash === "#key") { setTimeout(reloadIfStale, 1000); return; }
+    location.reload();
   }
   document.addEventListener("visibilitychange", reloadIfStale);
   window.addEventListener("pageshow", e => { if (e.persisted) reloadIfStale(); });
+  // 開いたままのタブでも、AI・別の端末・Macの取り込みで公開ページが新しくなったら読み直す（2026-11-13 殿の依頼）。
+  // 自分のページを取り直して版の印（最終更新の data-v）を比べる。戻ってきたとき（表示・フォーカス）はすぐ、
+  // 表示したままのときは1分おきに確かめる。読み直すのは、チェックの送信中・入力中でなく、しばらく操作がないときだけ。
+  // 操作の途中なら「新しい内容があります」のボタンを出し、押せばすぐ読み直す。読み直してもキャッシュで古い版が返ったときは、
+  // 同じ版へは2分あけて3回まで自動で試す（堂々巡りの防止。試した版・回数・時刻を sessionStorage に残す）
+  const PAGE_VER = (document.querySelector(".asof") || {dataset: {}}).dataset.v || "";
+  const RELOAD_KEY = "todo-reload-for", FILTER_KEY = "todo-filters";
+  const RETURN_IDLE = 3000, TICK_IDLE = 60000, CHECK_GAP = 15000, RETRY_GAP = 120000, RETRY_MAX = 3;
+  const triedFor = () => {
+    try { return JSON.parse(sessionStorage.getItem(RELOAD_KEY) || "null") || {}; } catch (e) { return {}; }
+  };
+  let lastActive = 0, lastCheck = 0, newerVer = "";
+  ["pointerdown", "keydown", "wheel", "touchstart"].forEach(t =>
+    document.addEventListener(t, () => { lastActive = Date.now(); }, {capture: true, passive: true}));
+  const newer = make("button", "newer", "新しい内容があります（押すと読み直します）");
+  newer.type = "button"; newer.hidden = true;
+  const asofRow = document.querySelector(".asof-row");
+  if (asofRow) asofRow.insertBefore(newer, asofRow.firstChild);
+  const busy = () => writing > 0 || location.hash === "#key" ||
+    !!(document.activeElement && document.activeElement.matches("input:not([type=checkbox]), textarea, select"));
+  const reloadNow = () => {
+    try {
+      const t = triedFor();
+      if (newerVer) sessionStorage.setItem(RELOAD_KEY, JSON.stringify({v: newerVer, n: t.v === newerVer ? (t.n || 0) + 1 : 1, at: Date.now()}));
+      // 絞り込み（カテゴリ・タグ）は読み直しても同じものを選び直す
+      const f = {};
+      document.querySelectorAll(".panel").forEach(p => {
+        const on = p.querySelector(".filter.on");
+        if (on && on.dataset.f) f[p.id] = on.dataset.f;
+      });
+      sessionStorage.setItem(FILTER_KEY, JSON.stringify(f));
+    } catch (e) {}
+    location.reload();
+  };
+  newer.addEventListener("click", () => { if (writing > 0) setTimeout(() => newer.click(), 500); else reloadNow(); });
+  const tryReload = idle => {
+    if (!newerVer || document.hidden) return;
+    const t = triedFor();
+    const held = t.v === newerVer && ((t.n || 0) >= RETRY_MAX || Date.now() - (t.at || 0) < RETRY_GAP);
+    if (held || busy() || Date.now() - lastActive < idle) { newer.hidden = false; return; }
+    reloadNow();
+  };
+  const checkUpdate = async idle => {
+    if (!PAGE_VER || document.hidden) return;
+    if (Date.now() - lastCheck < CHECK_GAP) { tryReload(idle); return; }
+    lastCheck = Date.now();
+    try {
+      const r = await fetch(location.pathname + "?v=" + Date.now(), {cache: "no-store"});
+      if (!r.ok) return;
+      const m = /<span class="asof" data-v="([^"]+)"/.exec(await r.text());
+      if (m && m[1] > PAGE_VER && m[1] > newerVer) newerVer = m[1];
+    } catch (e) { return; }
+    tryReload(idle);
+  };
+  document.addEventListener("visibilitychange", () => checkUpdate(RETURN_IDLE));
+  window.addEventListener("focus", () => checkUpdate(RETURN_IDLE));
+  window.addEventListener("pageshow", e => { if (e.persisted) checkUpdate(RETURN_IDLE); });
+  setInterval(() => checkUpdate(TICK_IDLE), 60000);
   // セクション（備忘録はタグ）の絞り込みはタブの中だけで効く。表をあとから作るタブは作ったあとに呼ぶ
   const wireFilters = panel => {
     const filters = panel.querySelectorAll(".filter");
@@ -321,6 +384,18 @@
       });
     });
   });
+  // 自動で読み直したときは、前に選んでいた絞り込みを選び直す
+  try {
+    const tried = triedFor();
+    if (!tried.v || tried.v <= PAGE_VER) sessionStorage.removeItem(RELOAD_KEY);
+    const f = JSON.parse(sessionStorage.getItem(FILTER_KEY) || "{}");
+    sessionStorage.removeItem(FILTER_KEY);
+    Object.entries(f).forEach(([pid, name]) => {
+      const p = document.getElementById(pid);
+      const b = p && [...p.querySelectorAll(".filter")].find(x => x.dataset.f === name);
+      if (b) b.click();
+    });
+  } catch (e) {}
   // X Bookmark: Grok Botが書く data/x_bookmarks.json を開くたびに読む（仕様は 02_tasks/20261101_x_bookmark/SPEC.md）。
   // 中身は投稿から作った文なので、すべて textContent で入れ、リンクは x.com の投稿URLだけにする
   const bm = document.getElementById("panel-bookmark");
@@ -495,11 +570,12 @@
     if (!e.target.matches("input.cb")) return;
     const id = Number(e.target.closest("tr").dataset.id), on = e.target.checked, src = rowById(id);
     setDone(src, on); refresh(); say("");
+    writing++;
     writes = writes.then(() => pushEvent({id, done: on, at: new Date().toISOString()})).catch(err => {
       setDone(src, !on); refresh();
       say(/HTTP 40[134]/.test(err.message) ? "保存できませんでした。鍵が無効か期限切れです（URLの末尾を #key にすると入れ直せます）。"
         : "保存できませんでした。通信を確認して、もう一度押してください。");
-    });
+    }).finally(() => { writing--; });
   });
   if (location.hash === "#key") {
     const form = make("form", "key-form"), input = make("input"), save = make("button", null, "保存"), clear = make("button", null, "このブラウザから消す");
@@ -524,8 +600,16 @@
   if (checkKey) {
     readChecks().then(({events}) => {
       addBoxes();
-      // Macが取り込む前の操作と、公開ページの更新が届く前の操作を画面に重ねる
-      events.forEach(ev => { const tr = ev && rowById(Number(ev.id)); if (tr) setDone(tr, ev.done === true); });
+      // Macが取り込む前の操作と、公開ページの更新が届く前の操作を画面に重ねる。取り込み済みの操作は、このページが
+      // その取り込みより前に作られたときだけ重ねる（取り込んだあとにAIが戻した状態を、古い操作で上書きして見せないため。2026-11-13）
+      const built = Date.parse(PAGE_VER);
+      events.forEach(ev => {
+        const tr = ev && rowById(Number(ev.id));
+        if (!tr) return;
+        const applied = ev.applied_at ? Date.parse(ev.applied_at) : NaN;
+        if (!isNaN(applied) && !isNaN(built) && built >= applied) return;
+        setDone(tr, ev.done === true);
+      });
       refresh();
     }).catch(err => {
       say(/HTTP 40[134]/.test(err.message) ? "チェックボタンの鍵が無効か期限切れです（URLの末尾を #key にすると入れ直せます）。"
