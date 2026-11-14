@@ -105,6 +105,9 @@
   .by { display: block; font-size: 12px; color: var(--muted); margin-top: 2px; }
   #bookmark tr.subhead th { padding: 0; }
   #bookmark td { overflow-wrap: anywhere; }
+  #bookmark tbody.nest-parent .fold { font-weight: 600; }
+  #bookmark tbody.nest-child .fold { padding-left: 28px; font-size: 13px; }
+  #bookmark tbody.nest-hidden { display: none; }
   .fold { display: block; width: 100%; font: inherit; font-size: 13.5px; color: inherit; background: none; border: none;
     text-align: left; cursor: pointer; padding: 10px 12px; }
   .fold::before { content: "▸"; display: inline-block; width: 1.2em; color: var(--ink-2); }
@@ -428,6 +431,23 @@
       items.forEach(i => { if (cat(i) !== "未分類" && !groups.has(cat(i))) groups.set(cat(i), []); });
       if (!groups.has("未分類")) groups.set("未分類", []);
       items.forEach(i => groups.get(cat(i)).push(i));
+      // 「親（子）」の名前はデータはそのままで、表示だけ入れ子にする（2026-11-14 殿の依頼）
+      const nestOf = name => {
+        const m = /^(.+)（(.+)）$/.exec(name);
+        return m ? { parent: m[1], child: m[2] } : null;
+      };
+      const blocks = [];
+      groups.forEach((list, name) => {
+        if (!list.length) return;
+        const nest = nestOf(name);
+        if (nest) {
+          let block = blocks.find(b => b.type === "nest" && b.parent === nest.parent);
+          if (!block) { block = { type: "nest", parent: nest.parent, children: [] }; blocks.push(block); }
+          block.children.push({ name, label: nest.child, list });
+        } else {
+          blocks.push({ type: "plain", name, list });
+        }
+      });
       // カテゴリは見出しの行で開閉する。最初は全部閉じ、開いているカテゴリは見る人のブラウザにだけ覚える（2026-11-04 殿の依頼）
       const FOLD_KEY = "xbm-open";
       let remembered = [];
@@ -438,22 +458,15 @@
       const isOpen = tb => !tb.classList.contains("shut");
       const setOpen = (tb, on) => {
         tb.classList.toggle("shut", !on);
-        tb.querySelector(".fold").setAttribute("aria-expanded", on ? "true" : "false");
+        const fold = tb.querySelector(".fold");
+        if (fold) fold.setAttribute("aria-expanded", on ? "true" : "false");
+        if (tb.classList.contains("nest-parent")) {
+          table.querySelectorAll("tbody.nest-child").forEach(ch => {
+            if (ch.dataset.p === tb.dataset.s) ch.classList.toggle("nest-hidden", !on);
+          });
+        }
       };
-      const filters = bm.querySelector(".filters");
-      const chip = (label, f, n) => {
-        const b = el("button", "filter" + (f ? "" : " on"), label + " ");
-        b.dataset.f = f; b.appendChild(el("b", null, String(n)));
-        return b;
-      };
-      filters.appendChild(chip("すべて", "", items.length));
-      table.querySelectorAll("tbody").forEach(tb => tb.remove());
-      groups.forEach((list, name) => {
-        if (!list.length) return;
-        filters.appendChild(chip(name, name, list.length));
-        const tb = el("tbody"), sub = el("tr", "subhead"), th = el("th"), fold = el("button", "fold", name + " ");
-        tb.dataset.s = name; th.colSpan = 3; fold.type = "button"; fold.appendChild(el("span", "n", String(list.length)));
-        th.appendChild(fold); sub.appendChild(th); tb.appendChild(sub);
+      const addRows = (tb, list) => {
         list.sort((a, b) => key(b).localeCompare(key(a))).forEach(i => {
           const tr = el("tr"), date = el("td", "d"), title = el("td", "t"), body = el("td", "c", str(i.summary));
           tr.dataset.d = key(i);
@@ -468,10 +481,54 @@
           if (/^@[A-Za-z0-9_]{1,15}$/.test(str(i.author))) body.appendChild(el("span", "by", i.author));
           tr.append(date, title, body); tb.appendChild(tr);
         });
-        setOpen(tb, remembered.includes(name));
-        table.appendChild(tb);
+      };
+      const addBody = (name, label, list, cls, parent) => {
+        const tb = el("tbody"), sub = el("tr", "subhead"), th = el("th"), fold = el("button", "fold", label + " ");
+        tb.dataset.s = name;
+        if (cls) tb.className = cls;
+        if (parent) tb.dataset.p = parent;
+        th.colSpan = 3; fold.type = "button"; fold.appendChild(el("span", "n", String(list.length)));
+        th.appendChild(fold); sub.appendChild(th); tb.appendChild(sub);
+        addRows(tb, list);
+        return tb;
+      };
+      const filters = bm.querySelector(".filters");
+      const chip = (label, f, n) => {
+        const b = el("button", "filter" + (f ? "" : " on"), label + " ");
+        b.dataset.f = f; b.appendChild(el("b", null, String(n)));
+        return b;
+      };
+      filters.appendChild(chip("すべて", "", items.length));
+      table.querySelectorAll("tbody").forEach(tb => tb.remove());
+      const bodies = [];
+      blocks.forEach(block => {
+        if (block.type === "plain") {
+          filters.appendChild(chip(block.name, block.name, block.list.length));
+          const tb = addBody(block.name, block.name, block.list, "", "");
+          setOpen(tb, remembered.includes(block.name));
+          table.appendChild(tb);
+          bodies.push(tb);
+          return;
+        }
+        const total = block.children.reduce((n, c) => n + c.list.length, 0);
+        filters.appendChild(chip(block.parent, block.parent, total));
+        const parent = el("tbody"), sub = el("tr", "subhead"), th = el("th"), fold = el("button", "fold", block.parent + " ");
+        parent.className = "nest-parent";
+        parent.dataset.s = block.parent;
+        th.colSpan = 3; fold.type = "button"; fold.appendChild(el("span", "n", String(total)));
+        th.appendChild(fold); sub.appendChild(th); parent.appendChild(sub);
+        table.appendChild(parent);
+        bodies.push(parent);
+        const childTbs = block.children.map(ch => {
+          const tb = addBody(ch.name, ch.label, ch.list, "nest-child", block.parent);
+          table.appendChild(tb);
+          bodies.push(tb);
+          return tb;
+        });
+        const parentOn = remembered.includes(block.parent) || childTbs.some(tb => remembered.includes(tb.dataset.s));
+        setOpen(parent, parentOn);
+        childTbs.forEach(tb => setOpen(tb, remembered.includes(tb.dataset.s)));
       });
-      const bodies = [...table.querySelectorAll("tbody[data-s]")];
       const foldAll = el("button", "fold-all");
       foldAll.type = "button";
       const labelAll = () => { foldAll.textContent = bodies.some(isOpen) ? "すべて閉じる" : "すべて開く"; };
@@ -487,11 +544,20 @@
       });
       labelAll();
       filters.appendChild(foldAll);
-      wireFilters(bm);
-      // 絞り込んだカテゴリは開く（閉じたままだと見出しだけになるため）
-      bm.querySelectorAll(".filter").forEach(b => b.addEventListener("click", () => {
-        const tb = bodies.find(x => x.dataset.s === b.dataset.f);
+      // 入れ子の子は親の絞り込みでも残す。ほかのタブの wireFilters はそのまま
+      const chips = [...filters.querySelectorAll(".filter")];
+      const matchFilter = (tb, f) => !f || tb.dataset.s === f || tb.dataset.p === f;
+      chips.forEach(b => b.addEventListener("click", () => {
+        chips.forEach(x => x.classList.toggle("on", x === b));
+        const f = b.dataset.f;
+        table.querySelectorAll("tbody[data-s]").forEach(tb => { tb.hidden = !matchFilter(tb, f); });
+        if (!f) return;
+        const tb = bodies.find(x => x.dataset.s === f);
         if (tb && !isOpen(tb)) { setOpen(tb, true); changed(); }
+        if (tb && tb.classList.contains("nest-parent")) {
+          bodies.filter(x => x.dataset.p === f && !isOpen(x)).forEach(x => setOpen(x, true));
+          changed();
+        }
       }));
     };
     fetch("data/x_bookmarks.json", {cache: "no-cache"})
