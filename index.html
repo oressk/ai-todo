@@ -438,7 +438,8 @@
       };
       const blocks = [];
       groups.forEach((list, name) => {
-        if (!list.length) return;
+        // ピックアップは0件でも見出しを出す（2026-11-14 殿の依頼）
+        if (!list.length && name !== "ピックアップ") return;
         const nest = nestOf(name);
         if (nest) {
           let block = blocks.find(b => b.type === "nest" && b.parent === nest.parent);
