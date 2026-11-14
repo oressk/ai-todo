@@ -44,12 +44,14 @@
   .tab[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--s1); }
   .tab:focus-visible { outline: 2px solid var(--s1); outline-offset: 2px; }
   body.wide main { max-width: 1280px; }
+  body.wide3 main { max-width: 1920px; }
   .views { display: inline-flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; margin-bottom: 10px; }
   .view { font: inherit; font-size: 12.5px; color: var(--ink-2); background: var(--surface); border: none;
     padding: 4px 14px; cursor: pointer; }
   .view.on { color: var(--ink); background: var(--wash); font-weight: 600; }
   .view:focus-visible { outline: 2px solid var(--s1); outline-offset: -2px; }
   .weeks { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; align-items: start; }
+  .weeks.three { grid-template-columns: 1fr 1fr 1fr; }
   .wk-col { display: grid; gap: 14px; min-width: 0; }
   .wk h3 { font-size: 14px; font-weight: 650; margin: 0 0 4px 2px; }
   .wk h3 .wk-tag { font-size: 12px; font-weight: 500; color: var(--muted); margin-left: 6px; }
@@ -145,7 +147,7 @@
 <header>
   <h1 class="ttl"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='3' fill='%231baf7a'/%3E%3Cpath d='M4 8.5l2.5 2.5L12 5.5' stroke='white' stroke-width='2' fill='none'/%3E%3C/svg%3E" alt="">タスク管理</h1>
   <span class="count">TODO 31件 ／ やりたい事 10件 ／ 備忘録 1件 ／ X Bookmark <span id="n-bm">…</span>件</span>
-  <div class="asof-row"><span class="asof" data-v="2026-11-14T15:38:20.530+09:00">最終更新 2026/11/14 15:38</span><nav class="hub" aria-label="ほかの管理ページ"><a href="http://192.168.1.81:8789/" title="AIシステム管理（自宅LAN内）" aria-label="AIシステム管理"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='3' fill='%237c3aed'/%3E%3Ctext x='8' y='12.4' text-anchor='middle' font-family='Arial,Helvetica,sans-serif' font-size='12.5' font-weight='700' fill='white'%3ES%3C/text%3E%3C/svg%3E" alt=""></a><a href="http://192.168.1.81:8789/projects/" title="プロジェクト管理（自宅LAN内）" aria-label="プロジェクト管理"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='3' fill='%232563eb'/%3E%3Ctext x='8' y='12.4' text-anchor='middle' font-family='Arial,Helvetica,sans-serif' font-size='12.5' font-weight='700' fill='white'%3EP%3C/text%3E%3C/svg%3E" alt=""></a></nav></div>
+  <div class="asof-row"><span class="asof" data-v="2026-11-14T18:14:50.556+09:00">最終更新 2026/11/14 18:14</span><nav class="hub" aria-label="ほかの管理ページ"><a href="http://192.168.1.81:8789/" title="AIシステム管理（自宅LAN内）" aria-label="AIシステム管理"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='3' fill='%237c3aed'/%3E%3Ctext x='8' y='12.4' text-anchor='middle' font-family='Arial,Helvetica,sans-serif' font-size='12.5' font-weight='700' fill='white'%3ES%3C/text%3E%3C/svg%3E" alt=""></a><a href="http://192.168.1.81:8789/projects/" title="プロジェクト管理（自宅LAN内）" aria-label="プロジェクト管理"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='3' fill='%232563eb'/%3E%3Ctext x='8' y='12.4' text-anchor='middle' font-family='Arial,Helvetica,sans-serif' font-size='12.5' font-weight='700' fill='white'%3EP%3C/text%3E%3C/svg%3E" alt=""></a></nav></div>
 </header>
 <p class="lead">「やる必要があること（TODO）」と「いつかやりたい事」、覚えておきたい「備忘録」、Xでブックマークした投稿の一覧。X BookmarkはGrok Bot、ほかはClaude/Codexが更新しています。</p>
 <div class="tabs" role="tablist" aria-label="種類">
@@ -224,6 +226,8 @@
   const todoPanel = document.getElementById("panel-todo");
   // OneNoteの週次ページと同じ形: 左に今週、右に翌週、翌週の下に以降（2026-11-05 殿の指定）。以降の下に依頼中（2026-11-13 殿の指定）
   const REQUEST = /依頼中$/;  // このカテゴリの項目は「依頼中」のカードに、カテゴリごとの見出し（■妻依頼中 など）で出す
+  // 幅の広い画面（1400px以上）では、以降・依頼中を翌週のさらに右（3列目）に置く（2026-11-14 殿の依頼）。狭ければ従来どおり翌週の下
+  const WIDE3 = window.matchMedia ? window.matchMedia("(min-width: 1400px)") : null;
   const renderDue = box => {
     const rows = [...todoPanel.querySelectorAll(".view-cat tr[data-due]")].map(tr => {
       const sec = tr.closest("tbody").dataset.s || "";
@@ -237,19 +241,26 @@
     const later = [];
     if (b.later.length) later.push(["■翌々週以降", b.later]);
     if (b.none.length) later.push(["■実施日未定", b.none]);
-    if (later.length) right.appendChild(weekBlock("以降", null, later));
+    const extra = WIDE3 && WIDE3.matches ? make("div", "wk-col") : right;
+    if (later.length) extra.appendChild(weekBlock("以降", null, later));
     const req = new Map();  // カテゴリ別の表の並び（カテゴリ番号順→項目番号順）のまま
     b.req.forEach(r => { if (!req.has(r.req)) req.set(r.req, []); req.get(r.req).push(r); });
-    if (req.size) right.appendChild(weekBlock("依頼中", null, [...req].map(([sec, rs]) => ["■" + sec, rs])));
+    if (req.size) extra.appendChild(weekBlock("依頼中", null, [...req].map(([sec, rs]) => ["■" + sec, rs])));
     grid.append(left, right);
+    if (extra !== right && extra.childNodes.length) { grid.appendChild(extra); grid.classList.add("three"); }
     box.replaceChildren(grid);
+    syncWide();
   };
   // TODOタブの表示（カテゴリ別／期限別）。選んだ表示は見る人のブラウザに覚え、URLの #due でも開ける
   const VIEW_KEY = "todo-view";
   let view = "cat";
   try { if (localStorage.getItem(VIEW_KEY) === "due") view = "due"; } catch (e) {}
   if (location.hash === "#due") view = "due";
-  const syncWide = () => document.body.classList.toggle("wide", !todoPanel.hidden && view === "due");
+  const syncWide = () => {
+    const on = !todoPanel.hidden && view === "due";
+    document.body.classList.toggle("wide", on);
+    document.body.classList.toggle("wide3", on && !!todoPanel.querySelector(".view-due .weeks.three"));
+  };
   const setView = (v, remember) => {
     view = v;
     const due = todoPanel.querySelector(".view-due");
@@ -267,6 +278,9 @@
     }
   };
   todoPanel.querySelectorAll(".view").forEach(b => b.addEventListener("click", () => { setView(b.dataset.view, true); reloadIfStale(); }));
+  // 画面の幅が1400pxをまたいだら、期限別を並べ直す（2列⇔3列）
+  const relayout = () => { if (view === "due") renderDue(todoPanel.querySelector(".view-due")); };
+  if (WIDE3) { if (WIDE3.addEventListener) WIDE3.addEventListener("change", relayout); else if (WIDE3.addListener) WIDE3.addListener(relayout); }
   // TODO／やりたい事／備忘録のタブ。URLの #todo / #due / #wish / #memo で開くタブが決まる
   const tabs = [...document.querySelectorAll(".tab[data-tab]")];
   const fromHash = () => tabs.some(t => "#" + t.dataset.tab === location.hash) ? location.hash.slice(1) : "todo";
@@ -575,6 +589,7 @@
           changed();
         }
       }));
+
     };
     fetch("data/x_bookmarks.json", {cache: "no-cache"})
       .then(r => r.status === 404 ? null : r.ok ? r.json() : Promise.reject(new Error("HTTP " + r.status)))
