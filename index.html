@@ -108,6 +108,11 @@
   #bookmark tbody.nest-parent .fold { font-weight: 600; }
   #bookmark tbody.nest-child .fold { padding-left: 28px; font-size: 13px; }
   #bookmark tbody.nest-hidden { display: none; }
+  .bm-new, .bm-new-n { display: inline-block; font-size: 10px; font-weight: 700; letter-spacing: 0.03em;
+    color: #fff; background: var(--s6); border-radius: 3px; padding: 0 5px; line-height: 1.55;
+    vertical-align: 1px; font-variant-numeric: tabular-nums; }
+  .bm-new { margin-right: 6px; }
+  .bm-new-n { margin-left: 6px; }
   .fold { display: block; width: 100%; font: inherit; font-size: 13.5px; color: inherit; background: none; border: none;
     text-align: left; cursor: pointer; padding: 10px 12px; }
   .fold::before { content: "▸"; display: inline-block; width: 1.2em; color: var(--ink-2); }
@@ -421,6 +426,11 @@
     // 並べ替えの鍵は日時を数値（ミリ秒）にして桁をそろえた文字列（小数秒やタイムゾーンの書き方の違いで順番が狂わない）
     const ms = v => String(Math.max(0, Date.parse(str(v)) || 0)).padStart(15, "0");
     const key = i => ms(i.found_at) + "|" + ms(i.posted_at);
+    // NEWは added_at から5日（120時間）以内。既存項目には added_at が無いので付かない（2026-11-14 殿の依頼）
+    const NEW_MS = 5 * 24 * 60 * 60 * 1000;
+    const isNew = i => { const t = Date.parse(str(i.added_at)); return Number.isFinite(t) && (Date.now() - t) < NEW_MS; };
+    const newCount = list => list.reduce((n, i) => n + (isNew(i) ? 1 : 0), 0);
+    const markNew = (node, n) => { if (n) node.appendChild(el("span", "bm-new-n", "NEW " + n)); };
     const render = d => {
       const items = (d && Array.isArray(d.items) ? d.items : []).filter(i => i && str(i.title));
       setCount(items.length);
@@ -472,12 +482,13 @@
           const tr = el("tr"), date = el("td", "d"), title = el("td", "t"), body = el("td", "c", str(i.summary));
           tr.dataset.d = key(i);
           date.appendChild(el("span", "date", str(i.found_at).slice(0, 10).replace(/-/g, "/")));
+          if (isNew(i)) title.appendChild(el("span", "bm-new", "NEW"));
           if (/^https:\/\/x\.com\/[A-Za-z0-9_]{1,15}\/status\/\d+$/.test(str(i.url))) {
             const a = el("a", null, str(i.title));
             a.href = i.url; a.target = "_blank"; a.rel = "noopener noreferrer";
             title.appendChild(a);
           } else {
-            title.textContent = str(i.title);
+            title.appendChild(document.createTextNode(str(i.title)));
           }
           if (/^@[A-Za-z0-9_]{1,15}$/.test(str(i.author))) body.appendChild(el("span", "by", i.author));
           tr.append(date, title, body); tb.appendChild(tr);
@@ -489,22 +500,24 @@
         if (cls) tb.className = cls;
         if (parent) tb.dataset.p = parent;
         th.colSpan = 3; fold.type = "button"; fold.appendChild(el("span", "n", String(list.length)));
+        markNew(fold, newCount(list));
         th.appendChild(fold); sub.appendChild(th); tb.appendChild(sub);
         addRows(tb, list);
         return tb;
       };
       const filters = bm.querySelector(".filters");
-      const chip = (label, f, n) => {
+      const chip = (label, f, n, newN) => {
         const b = el("button", "filter" + (f ? "" : " on"), label + " ");
         b.dataset.f = f; b.appendChild(el("b", null, String(n)));
+        markNew(b, newN);
         return b;
       };
-      filters.appendChild(chip("すべて", "", items.length));
+      filters.appendChild(chip("すべて", "", items.length, newCount(items)));
       table.querySelectorAll("tbody").forEach(tb => tb.remove());
       const bodies = [];
       blocks.forEach(block => {
         if (block.type === "plain") {
-          filters.appendChild(chip(block.name, block.name, block.list.length));
+          filters.appendChild(chip(block.name, block.name, block.list.length, newCount(block.list)));
           const tb = addBody(block.name, block.name, block.list, "", "");
           setOpen(tb, remembered.includes(block.name));
           table.appendChild(tb);
@@ -512,11 +525,13 @@
           return;
         }
         const total = block.children.reduce((n, c) => n + c.list.length, 0);
-        filters.appendChild(chip(block.parent, block.parent, total));
+        const parentNew = block.children.reduce((n, c) => n + newCount(c.list), 0);
+        filters.appendChild(chip(block.parent, block.parent, total, parentNew));
         const parent = el("tbody"), sub = el("tr", "subhead"), th = el("th"), fold = el("button", "fold", block.parent + " ");
         parent.className = "nest-parent";
         parent.dataset.s = block.parent;
         th.colSpan = 3; fold.type = "button"; fold.appendChild(el("span", "n", String(total)));
+        markNew(fold, parentNew);
         th.appendChild(fold); sub.appendChild(th); parent.appendChild(sub);
         table.appendChild(parent);
         bodies.push(parent);
