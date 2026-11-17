@@ -118,6 +118,9 @@
   #bookmark td { overflow-wrap: anywhere; }
   #bookmark tbody.nest-parent .fold { font-weight: 600; }
   #bookmark tbody.nest-child .fold { padding-left: 28px; font-size: 13px; }
+  /* 子のカテゴリの行は、登録日を子の見出しと同じ位置まで字下げする（2026-11-17 殿の依頼）。
+     親や入れ子でないカテゴリで、登録日が見出しの ▸ と縦にそろうのと同じ形にする（以前は子の見出しより左に出ていた） */
+  #bookmark tbody.nest-child td.d { padding-left: 28px; }
   #bookmark tbody.nest-hidden { display: none; }
   .bm-new, .bm-new-n { display: inline-block; font-size: 10px; font-weight: 700; letter-spacing: 0.03em;
     color: #fff; background: var(--s6); border-radius: 3px; padding: 0 5px; line-height: 1.55;
@@ -308,7 +311,7 @@
 <header>
   <h1 class="ttl"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='3' fill='%231baf7a'/%3E%3Cpath d='M4 8.5l2.5 2.5L12 5.5' stroke='white' stroke-width='2' fill='none'/%3E%3C/svg%3E" alt="">タスク管理</h1>
   <span class="count">年次目標 <span id="n-goal">0件</span> ／ TODO 28件 ／ ルーティン 10件 ／ やりたい事 16件 ／ 備忘録 0件 ／ X Bookmark <span id="n-bm">…</span>件</span>
-  <div class="asof-row"><span class="asof" data-v="2026-11-17T23:39:51.352+09:00">最終更新 2026/11/17 23:39</span><nav class="hub" aria-label="ほかの管理ページ"><a href="http://192.168.1.81:8789/" title="AIシステム管理（自宅LAN内）" aria-label="AIシステム管理"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='3' fill='%237c3aed'/%3E%3Ctext x='8' y='12.4' text-anchor='middle' font-family='Arial,Helvetica,sans-serif' font-size='12.5' font-weight='700' fill='white'%3ES%3C/text%3E%3C/svg%3E" alt=""></a><a href="http://192.168.1.81:8789/projects/" title="プロジェクト管理（自宅LAN内）" aria-label="プロジェクト管理"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='3' fill='%232563eb'/%3E%3Ctext x='8' y='12.4' text-anchor='middle' font-family='Arial,Helvetica,sans-serif' font-size='12.5' font-weight='700' fill='white'%3EP%3C/text%3E%3C/svg%3E" alt=""></a></nav></div>
+  <div class="asof-row"><span class="asof" data-v="2026-11-17T23:41:38.936+09:00">最終更新 2026/11/17 23:41</span><nav class="hub" aria-label="ほかの管理ページ"><a href="http://192.168.1.81:8789/" title="AIシステム管理（自宅LAN内）" aria-label="AIシステム管理"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='3' fill='%237c3aed'/%3E%3Ctext x='8' y='12.4' text-anchor='middle' font-family='Arial,Helvetica,sans-serif' font-size='12.5' font-weight='700' fill='white'%3ES%3C/text%3E%3C/svg%3E" alt=""></a><a href="http://192.168.1.81:8789/projects/" title="プロジェクト管理（自宅LAN内）" aria-label="プロジェクト管理"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='3' fill='%232563eb'/%3E%3Ctext x='8' y='12.4' text-anchor='middle' font-family='Arial,Helvetica,sans-serif' font-size='12.5' font-weight='700' fill='white'%3EP%3C/text%3E%3C/svg%3E" alt=""></a></nav></div>
 </header>
 <p class="lead">年ごとの「年次目標」と、「やる必要があること（TODO）」、毎日・毎週の「ルーティン」、「いつかやりたい事」、覚えておきたい「備忘録」、Xでブックマークした投稿の一覧。X BookmarkはGrok Bot、ほかはClaude/Codexが更新しています。</p>
 <div class="tabs" role="tablist" aria-label="種類">
