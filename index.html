@@ -101,6 +101,11 @@
   tr.subhead .n { color: var(--muted); font-weight: 500; margin-left: 4px; font-variant-numeric: tabular-nums; }
   .date { display: block; font-variant-numeric: tabular-nums; }
   td.t, th.t { width: 45%; }
+  /* やりたい事・ブックマークのタブのタイトル列は文字数に合わせた幅にし、メモ・内容を左へ寄せる（2026-11-17 殿の依頼）。
+     期限別でページが広がると、45% ではタイトル列が伸びて、メモ・内容がタイトルから離れていたため。
+     幅はタイトルの長さ（やりたい事は最大約15字で1行に収める。Bookmarkは中央値約15字・最大約22字で、投稿者の行があり行の高さは2行ぶんなので、長いタイトルは2行に折り返す）から決めた。狭い画面は下の @media で従来の割合に戻す */
+  #wish td.t, #wish th.t { width: 17em; }
+  #bookmark td.t, #bookmark th.t { width: 18em; }
   td.m { font-size: 12.5px; color: var(--ink-2); }
   td.g, th.g { width: 9em; }
   .tag { display: inline-block; font-size: 12px; color: var(--ink-2); background: var(--wash);
@@ -132,7 +137,9 @@
   tbody.shut tr.subhead th { border-bottom-color: var(--grid); }
   tbody.shut:last-of-type tr.subhead th { border-bottom: none; }
   /* ルーティン（2026-11-16）。朝は --s3（橙）、夜は --s5（藍）、全部できた日は緑の地 */
-  .rt { display: grid; grid-template-columns: minmax(240px, 1fr) minmax(0, 1.4fr); gap: 14px; align-items: start; }
+  /* 左のカードは中身に足りる幅で止め、残りをカレンダーへ（2026-11-17 殿の依頼）。以前の 1 : 1.4 の割合は、ページが860pxのときの決め方で、
+     期限別の広い幅をほかのタブにもそろえてから、カードの右に余白が大きく出ていた */
+  .rt { display: grid; grid-template-columns: minmax(240px, 320px) minmax(0, 1fr); gap: 14px; align-items: start; }
   .rt-side { display: grid; gap: 12px; min-width: 0; }
   .rt-day { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; min-height: 26px; font-size: 14px; font-weight: 650; }
   .rt-today { font: inherit; font-size: 12.5px; font-weight: 500; color: var(--s1); background: var(--wash);
@@ -281,6 +288,7 @@
     .tabs::-webkit-scrollbar { display: none; }
     .tabs .tab { flex: none; margin-bottom: 0; }
     #bookmark td.t, #bookmark th.t { width: 38%; }
+    #wish td.t, #wish th.t { width: 45%; }
     .rt-cal { padding: 8px 6px; }
     .rt-grid { gap: 2px; }
     .rt-cell { min-height: 48px; padding: 3px; }
@@ -300,7 +308,7 @@
 <header>
   <h1 class="ttl"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='3' fill='%231baf7a'/%3E%3Cpath d='M4 8.5l2.5 2.5L12 5.5' stroke='white' stroke-width='2' fill='none'/%3E%3C/svg%3E" alt="">タスク管理</h1>
   <span class="count">年次目標 <span id="n-goal">0件</span> ／ TODO 28件 ／ ルーティン 10件 ／ やりたい事 10件 ／ 備忘録 0件 ／ X Bookmark <span id="n-bm">…</span>件</span>
-  <div class="asof-row"><span class="asof" data-v="2026-11-17T23:19:16.278+09:00">最終更新 2026/11/17 23:19</span><nav class="hub" aria-label="ほかの管理ページ"><a href="http://192.168.1.81:8789/" title="AIシステム管理（自宅LAN内）" aria-label="AIシステム管理"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='3' fill='%237c3aed'/%3E%3Ctext x='8' y='12.4' text-anchor='middle' font-family='Arial,Helvetica,sans-serif' font-size='12.5' font-weight='700' fill='white'%3ES%3C/text%3E%3C/svg%3E" alt=""></a><a href="http://192.168.1.81:8789/projects/" title="プロジェクト管理（自宅LAN内）" aria-label="プロジェクト管理"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='3' fill='%232563eb'/%3E%3Ctext x='8' y='12.4' text-anchor='middle' font-family='Arial,Helvetica,sans-serif' font-size='12.5' font-weight='700' fill='white'%3EP%3C/text%3E%3C/svg%3E" alt=""></a></nav></div>
+  <div class="asof-row"><span class="asof" data-v="2026-11-17T23:26:44.803+09:00">最終更新 2026/11/17 23:26</span><nav class="hub" aria-label="ほかの管理ページ"><a href="http://192.168.1.81:8789/" title="AIシステム管理（自宅LAN内）" aria-label="AIシステム管理"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='3' fill='%237c3aed'/%3E%3Ctext x='8' y='12.4' text-anchor='middle' font-family='Arial,Helvetica,sans-serif' font-size='12.5' font-weight='700' fill='white'%3ES%3C/text%3E%3C/svg%3E" alt=""></a><a href="http://192.168.1.81:8789/projects/" title="プロジェクト管理（自宅LAN内）" aria-label="プロジェクト管理"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='3' fill='%232563eb'/%3E%3Ctext x='8' y='12.4' text-anchor='middle' font-family='Arial,Helvetica,sans-serif' font-size='12.5' font-weight='700' fill='white'%3EP%3C/text%3E%3C/svg%3E" alt=""></a></nav></div>
 </header>
 <p class="lead">年ごとの「年次目標」と、「やる必要があること（TODO）」、毎日・毎週の「ルーティン」、「いつかやりたい事」、覚えておきたい「備忘録」、Xでブックマークした投稿の一覧。X BookmarkはGrok Bot、ほかはClaude/Codexが更新しています。</p>
 <div class="tabs" role="tablist" aria-label="種類">
