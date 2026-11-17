@@ -12,6 +12,7 @@
     --grid: #e1e0d9; --border: rgba(11,11,11,0.10); --wash: rgba(42,120,214,0.10);
     --s1: #2a78d6; --s2: #1baf7a; --s3: #c98500; --s4: #008300; --s5: #4a3aa7; --s6: #e34948; --s7: #e87ba4;
     --full: rgba(27,175,122,0.16);
+    --gold: #d99a00; --gold-ink: #8a5d00; --gold-1: #fff7dc; --gold-2: #ffe9a6; --gold-line: #efc451;
   }
   @media (prefers-color-scheme: dark) {
     :root {
@@ -19,6 +20,7 @@
       --grid: #2c2c2a; --border: rgba(255,255,255,0.10); --wash: rgba(57,135,229,0.14);
       --s1: #3987e5; --s2: #199e70; --s3: #c98500; --s4: #0ca30c; --s5: #9085e9; --s6: #e66767; --s7: #d55181;
       --full: rgba(25,158,112,0.24);
+      --gold: #f2b51d; --gold-ink: #ffd36a; --gold-1: rgba(242,181,29,0.10); --gold-2: rgba(242,181,29,0.24); --gold-line: rgba(242,181,29,0.55);
     }
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -116,6 +118,8 @@
     color: #fff; background: var(--s6); border-radius: 3px; padding: 0 5px; line-height: 1.55;
     vertical-align: 1px; font-variant-numeric: tabular-nums; }
   .bm-new { margin-right: 6px; }
+  .gl-new { display: inline-block; margin-left: 6px; font-size: 10px; font-weight: 700; letter-spacing: 0.03em; color: #fff;
+    background: var(--s6); border-radius: 3px; padding: 0 5px; line-height: 1.55; vertical-align: 1px; }
   .bm-new-n { margin-left: 6px; }
   .fold { display: block; width: 100%; font: inherit; font-size: 13.5px; color: inherit; background: none; border: none;
     text-align: left; cursor: pointer; padding: 10px 12px; }
@@ -184,6 +188,77 @@
   .rt-legend span[hidden] { display: none; }
   .rt-legend i.full { border-radius: 3px; width: 12px; height: 10px; background: var(--full); border: 1px solid var(--grid); }
   .rt-legend .rt-sum { margin-left: auto; font-variant-numeric: tabular-nums; }
+  /* 年次目標（2026-11-17）。達成した目標は金色のカード。祝いの紙吹雪は canvas（.gl-confetti）、「達成！」の表示は .gl-cheer */
+  .gl { display: grid; gap: 14px; }
+  .gl-head { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+  .gl-head h3 { font-size: 16px; font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .gl-opts { margin-left: auto; display: flex; justify-content: flex-end; gap: 6px; }
+  .gl-opt { font: inherit; font-size: 12.5px; color: var(--ink-2); background: var(--surface); white-space: nowrap;
+    border: 1px solid var(--border); border-radius: 99px; padding: 2px 12px; cursor: pointer; }
+  .gl-opt:focus-visible { outline: 2px solid var(--s1); outline-offset: 1px; }
+  .gl-hero { display: flex; align-items: center; gap: 18px; background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px; padding: 14px 18px; }
+  .gl-ring { flex: none; position: relative; width: 96px; height: 96px; }
+  .gl-ring svg { display: block; width: 100%; height: 100%; transform: rotate(-90deg); }
+  .gl-ring circle { fill: none; stroke-width: 10; }
+  .gl-ring .bg { stroke: var(--grid); }
+  .gl-ring .fg { stroke: var(--gold); stroke-linecap: round; transition: stroke-dashoffset 1s cubic-bezier(.2,.8,.2,1) .2s; }
+  .gl-ring .pct { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+    font-size: 20px; font-weight: 750; font-variant-numeric: tabular-nums; }
+  .gl-stat { flex: 1; min-width: 0; display: grid; gap: 7px; }
+  .gl-big { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 8px; font-size: 14px; color: var(--ink-2); }
+  .gl-big b { font-size: 28px; line-height: 1.1; font-weight: 800; color: var(--ink); font-variant-numeric: tabular-nums; }
+  .gl-left { font-size: 13px; color: var(--ink-2); }
+  .gl-all { font-size: 14px; font-weight: 750; color: var(--gold-ink); }
+  .gl-medals { display: flex; flex-wrap: wrap; gap: 5px; }
+  .gl-medals i { width: 13px; height: 13px; border-radius: 50%; background: var(--grid); }
+  .gl-medals i.on { background: radial-gradient(circle at 35% 35%, #fff3b0, var(--gold) 70%); box-shadow: 0 0 0 1px var(--gold-line); }
+  .gl-time { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; font-size: 12.5px; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+  .gl-pace { font-size: 11.5px; font-weight: 650; color: var(--s4); background: var(--full); border-radius: 99px; padding: 0 8px; }
+  .gl-bar { height: 7px; border-radius: 4px; background: var(--grid); overflow: hidden; }
+  .gl-bar b { display: block; height: 100%; border-radius: 4px; background: linear-gradient(90deg, var(--gold), #ffd34d);
+    transition: width 1.1s cubic-bezier(.2,.8,.2,1) .25s; }
+  .gl-bar.time b { background: var(--muted); }
+  .gl-list { list-style: none; display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 10px; }
+  .gl-card { position: relative; display: flex; align-items: flex-start; gap: 10px; min-width: 0; overflow: hidden;
+    padding: 12px 14px; background: var(--surface); border: 1px solid var(--border); border-left: 4px solid var(--s1); border-radius: 10px; }
+  .gl-card.done { background: linear-gradient(135deg, var(--gold-1), var(--gold-2)); border-color: var(--gold-line); border-left-color: var(--gold); }
+  .gl-no { flex: none; padding-top: 2px; font-size: 12px; font-weight: 700; color: var(--muted); font-variant-numeric: tabular-nums; }
+  .gl-card.done .gl-no { color: var(--gold-ink); }
+  .gl-body { flex: 1; min-width: 0; display: grid; gap: 3px; overflow-wrap: anywhere; }
+  .gl-tx { font-size: 14.5px; font-weight: 600; }
+  .gl-note { font-size: 12.5px; color: var(--ink-2); }
+  .gl-date { font-size: 12px; font-weight: 700; color: var(--gold-ink); font-variant-numeric: tabular-nums; }
+  .gl-trophy { flex: none; font-size: 22px; line-height: 1; }
+  .gl-check { flex: none; display: flex; padding-top: 1px; cursor: pointer; }
+  .gl-cb { width: 20px; height: 20px; accent-color: var(--gold); cursor: pointer; }
+  .gl-mark { flex: none; display: flex; align-items: center; justify-content: center; width: 20px; height: 20px; margin-top: 1px;
+    border-radius: 50%; border: 2px solid var(--grid); font-size: 12px; font-weight: 800; color: #fff; }
+  .gl-card.done .gl-mark { border-color: var(--gold); background: var(--gold); }
+  .gl-card.pop { animation: gl-pop .7s cubic-bezier(.2,1.6,.4,1); }
+  .gl-card.pop::after { content: ""; position: absolute; inset: 0; pointer-events: none; transform: translateX(-100%);
+    background: linear-gradient(110deg, transparent 30%, rgba(255,255,255,.75) 50%, transparent 70%); animation: gl-shine 1.1s .15s ease-out; }
+  .gl-empty { color: var(--muted); text-align: center; padding: 28px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; }
+  .gl-confetti { position: fixed; inset: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 60; }
+  .gl-cheer { position: fixed; inset: 0; z-index: 50; display: flex; align-items: center; justify-content: center; padding: 16px;
+    background: rgba(0,0,0,.30); cursor: pointer; }
+  .gl-cheer[hidden] { display: none; }
+  .gl-cheer-card { width: 100%; max-width: 420px; text-align: center; background: var(--surface); border: 2px solid var(--gold-line);
+    border-radius: 18px; padding: 22px 26px 14px; box-shadow: 0 18px 60px rgba(0,0,0,.28); animation: gl-in .55s cubic-bezier(.2,1.5,.4,1); }
+  .gl-cheer-card.all { border-width: 3px; box-shadow: 0 0 0 6px var(--gold-2), 0 18px 60px rgba(0,0,0,.3); }
+  .gl-cheer-icon { font-size: 54px; line-height: 1.15; animation: gl-bounce 1.1s ease-in-out .3s 2; }
+  .gl-cheer-title { font-size: 36px; font-weight: 850; letter-spacing: .04em; line-height: 1.25;
+    background: linear-gradient(90deg, #d99a00, #ffcf3f, #d99a00); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .gl-cheer-text { margin-top: 4px; font-size: 16px; font-weight: 650; overflow-wrap: anywhere; }
+  .gl-cheer-sub { margin: 6px 0 10px; font-size: 13px; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+  .gl-cheer-close { margin-top: 10px; font-size: 11.5px; color: var(--muted); }
+  @keyframes gl-pop { 0% { transform: scale(1); } 40% { transform: scale(1.06); } 100% { transform: scale(1); } }
+  @keyframes gl-shine { to { transform: translateX(100%); } }
+  @keyframes gl-in { from { transform: scale(.6); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+  @keyframes gl-bounce { 0%, 100% { transform: translateY(0) rotate(0); } 30% { transform: translateY(-9px) rotate(-8deg); } 60% { transform: translateY(0) rotate(6deg); } }
+  /* 演出ひかえめ（ページの切り替え。body に gl-calm）: 紙吹雪と動きを出さない */
+  .gl-calm .gl-card.pop, .gl-calm .gl-card.pop::after, .gl-calm .gl-cheer-card, .gl-calm .gl-cheer-icon { animation: none; }
+  .gl-calm .gl-ring .fg, .gl-calm .gl-bar b { transition: none; }
   @media (max-width: 900px) {
     .weeks { grid-template-columns: 1fr; }
   }
@@ -212,6 +287,11 @@
     .rt-dots { gap: 1px; }
     .rt-dots i { width: 5px; height: 5px; }
     .rt-wk { font-size: 10.5px; }
+    .gl-hero { gap: 12px; padding: 12px; }
+    .gl-ring { width: 78px; height: 78px; }
+    .gl-ring .pct { font-size: 17px; }
+    .gl-list { grid-template-columns: 1fr; }
+    .gl-cheer-title { font-size: 30px; }
   }
 </style>
 </head>
@@ -219,18 +299,19 @@
 <main>
 <header>
   <h1 class="ttl"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='3' fill='%231baf7a'/%3E%3Cpath d='M4 8.5l2.5 2.5L12 5.5' stroke='white' stroke-width='2' fill='none'/%3E%3C/svg%3E" alt="">タスク管理</h1>
-  <span class="count">TODO 30件 ／ ルーティン 10件 ／ やりたい事 10件 ／ 備忘録 0件 ／ X Bookmark <span id="n-bm">…</span>件</span>
-  <div class="asof-row"><span class="asof" data-v="2026-11-17T12:52:29.267+09:00">最終更新 2026/11/17 12:52</span><nav class="hub" aria-label="ほかの管理ページ"><a href="http://192.168.1.81:8789/" title="AIシステム管理（自宅LAN内）" aria-label="AIシステム管理"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='3' fill='%237c3aed'/%3E%3Ctext x='8' y='12.4' text-anchor='middle' font-family='Arial,Helvetica,sans-serif' font-size='12.5' font-weight='700' fill='white'%3ES%3C/text%3E%3C/svg%3E" alt=""></a><a href="http://192.168.1.81:8789/projects/" title="プロジェクト管理（自宅LAN内）" aria-label="プロジェクト管理"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='3' fill='%232563eb'/%3E%3Ctext x='8' y='12.4' text-anchor='middle' font-family='Arial,Helvetica,sans-serif' font-size='12.5' font-weight='700' fill='white'%3EP%3C/text%3E%3C/svg%3E" alt=""></a></nav></div>
+  <span class="count">年次目標 <span id="n-goal">0件</span> ／ TODO 30件 ／ ルーティン 10件 ／ やりたい事 10件 ／ 備忘録 0件 ／ X Bookmark <span id="n-bm">…</span>件</span>
+  <div class="asof-row"><span class="asof" data-v="2026-11-17T13:51:26.344+09:00">最終更新 2026/11/17 13:51</span><nav class="hub" aria-label="ほかの管理ページ"><a href="http://192.168.1.81:8789/" title="AIシステム管理（自宅LAN内）" aria-label="AIシステム管理"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='3' fill='%237c3aed'/%3E%3Ctext x='8' y='12.4' text-anchor='middle' font-family='Arial,Helvetica,sans-serif' font-size='12.5' font-weight='700' fill='white'%3ES%3C/text%3E%3C/svg%3E" alt=""></a><a href="http://192.168.1.81:8789/projects/" title="プロジェクト管理（自宅LAN内）" aria-label="プロジェクト管理"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='3' fill='%232563eb'/%3E%3Ctext x='8' y='12.4' text-anchor='middle' font-family='Arial,Helvetica,sans-serif' font-size='12.5' font-weight='700' fill='white'%3EP%3C/text%3E%3C/svg%3E" alt=""></a></nav></div>
 </header>
-<p class="lead">「やる必要があること（TODO）」と毎日・毎週の「ルーティン」、「いつかやりたい事」、覚えておきたい「備忘録」、Xでブックマークした投稿の一覧。X BookmarkはGrok Bot、ほかはClaude/Codexが更新しています。</p>
+<p class="lead">年ごとの「年次目標」と、「やる必要があること（TODO）」、毎日・毎週の「ルーティン」、「いつかやりたい事」、覚えておきたい「備忘録」、Xでブックマークした投稿の一覧。X BookmarkはGrok Bot、ほかはClaude/Codexが更新しています。</p>
 <div class="tabs" role="tablist" aria-label="種類">
+  <button type="button" class="tab" role="tab" id="tab-goal" aria-controls="panel-goal" aria-selected="false" data-tab="goal" tabindex="-1">年次目標<span class="n">0</span></button>
   <button type="button" class="tab" role="tab" id="tab-todo" aria-controls="panel-todo" aria-selected="true" data-tab="todo">TODO<span class="n">30</span></button>
   <button type="button" class="tab" role="tab" id="tab-routine" aria-controls="panel-routine" aria-selected="false" data-tab="routine" tabindex="-1">ルーティン<span class="n">10</span></button>
   <button type="button" class="tab" role="tab" id="tab-wish" aria-controls="panel-wish" aria-selected="false" data-tab="wish" tabindex="-1">やりたい事<span class="n">10</span></button>
   <button type="button" class="tab" role="tab" id="tab-memo" aria-controls="panel-memo" aria-selected="false" data-tab="memo" tabindex="-1">備忘録<span class="n">0</span></button>
   <button type="button" class="tab" role="tab" id="tab-bookmark" aria-controls="panel-bookmark" aria-selected="false" data-tab="bookmark" tabindex="-1">X Bookmark<span class="n" id="tab-n-bm">…</span></button>
 </div>
-<section class="panel" id="panel-todo" role="tabpanel" aria-labelledby="tab-todo"><div class="views" role="group" aria-label="表示"><button type="button" class="view on" data-view="cat" aria-pressed="true">カテゴリ別</button><button type="button" class="view" data-view="due" aria-pressed="false">期限別</button></div><div class="view-cat"><div class="filters"><button class="filter on" data-f="">すべて <b>30</b></button><button class="filter" data-f="ADMIN">ADMIN <b>2</b></button><button class="filter" data-f="生活">生活 <b>19</b></button><button class="filter" data-f="AI関連">AI関連 <b>4</b></button><button class="filter" data-f="株関連">株関連 <b>1</b></button><button class="filter" data-f="妻依頼中">妻依頼中 <b>4</b></button></div><table id="todo"><thead><tr><th class="t">タイトル</th><th class="m">メモ</th><th class="du">期限</th></tr></thead><tbody data-s="ADMIN"><tr class="subhead"><th colspan="3"><span class="code">0</span>ADMIN <span class="n">2</span></th></tr><tr data-id="4" data-due=""><td class="t">不要サイトの登録内容変更</td><td class="m">セキュリティ対策</td><td class="du"></td></tr><tr class="done" data-id="20" data-due="2026-11-16" data-closed="2026-11-16"><td class="t"><span class="ck">✓</span><span class="tx">みずほ証券</span></td><td class="m"></td><td class="du">11/16</td></tr><tr data-id="38" data-due="2026-11-17"><td class="t">JAM年末調整対応</td><td class="m"></td><td class="du">11/17</td></tr></tbody><tbody data-s="生活"><tr class="subhead"><th colspan="3"><span class="code">1</span>生活 <span class="n">19</span></th></tr><tr data-id="7" data-due=""><td class="t">時計の選定</td><td class="m"></td><td class="du"></td></tr><tr class="done" data-id="40" data-due="2026-11-16" data-closed="2026-11-16"><td class="t"><span class="ck">✓</span><span class="tx">【9-】歯医者</span></td><td class="m"></td><td class="du">11/16</td></tr><tr class="done" data-id="41" data-due="2026-11-16" data-closed="2026-11-16"><td class="t"><span class="ck">✓</span><span class="tx">【11-】テニス</span></td><td class="m"></td><td class="du">11/16</td></tr><tr data-id="43" data-due="2026-11-18"><td class="t">【11-】テニス</td><td class="m"></td><td class="du">11/18</td></tr><tr data-id="44" data-due="2026-11-19"><td class="t">【11-】テニス</td><td class="m"></td><td class="du">11/19</td></tr><tr data-id="45" data-due="2026-11-20"><td class="t">【10-】トレ</td><td class="m"></td><td class="du">11/20</td></tr><tr data-id="48" data-due="2026-11-18"><td class="t">帰省の予定を決める</td><td class="m"></td><td class="du">11/18</td></tr><tr data-id="58" data-due="2026-11-17"><td class="t">【15-】折り紙</td><td class="m"></td><td class="du">11/17</td></tr><tr data-id="63" data-due="2026-11-16"><td class="t">2027年の目標を立てる</td><td class="m"></td><td class="du">11/16</td></tr><tr data-id="64" data-due=""><td class="t">年末のTODOを固めておく</td><td class="m"></td><td class="du"></td></tr><tr class="done" data-id="65" data-due="2026-11-16" data-closed="2026-11-16"><td class="t"><span class="ck">✓</span><span class="tx">ルーティンの追跡方法検討</span></td><td class="m"></td><td class="du">11/16</td></tr><tr data-id="67" data-due="2026-11-18"><td class="t">脇汗対応</td><td class="m"></td><td class="du">11/18</td></tr><tr data-id="68" data-due=""><td class="t">くま対応</td><td class="m"></td><td class="du"></td></tr><tr data-id="69" data-due=""><td class="t">しみ対応</td><td class="m"></td><td class="du"></td></tr><tr data-id="70" data-due="2026-11-19"><td class="t">新居のこれまでのカスタマイズ情報整理</td><td class="m"></td><td class="du">11/19</td></tr><tr class="done" data-id="71" data-due="2026-11-16" data-closed="2026-11-16"><td class="t"><span class="ck">✓</span><span class="tx">12月の予定調整</span></td><td class="m"></td><td class="du">11/16</td></tr><tr class="done" data-id="72" data-due="2026-11-16" data-closed="2026-11-16"><td class="t"><span class="ck">✓</span><span class="tx">鼻毛脱毛予約</span></td><td class="m"></td><td class="du">11/16</td></tr><tr data-id="73" data-due="2026-11-18"><td class="t">セントラルプラン変更</td><td class="m"></td><td class="du">11/18</td></tr><tr data-id="74" data-due="2026-11-18"><td class="t">クマ・シミどっちするか検討</td><td class="m"></td><td class="du">11/18</td></tr><tr data-id="77" data-due="2026-11-24"><td class="t">【11-】テニス</td><td class="m"></td><td class="du">11/24</td></tr><tr data-id="78" data-due="2026-11-25"><td class="t">【11-】テニス</td><td class="m"></td><td class="du">11/25</td></tr><tr data-id="79" data-due="2026-11-26"><td class="t">【11-】テニス</td><td class="m"></td><td class="du">11/26</td></tr><tr data-id="80" data-due="2026-11-27"><td class="t">【10-】トレ</td><td class="m"></td><td class="du">11/27</td></tr><tr data-id="81" data-due="2026-11-17"><td class="t">大掃除の日程を入れる</td><td class="m"></td><td class="du">11/17</td></tr></tbody><tbody data-s="AI関連"><tr class="subhead"><th colspan="3"><span class="code">2</span>AI関連 <span class="n">4</span></th></tr><tr data-id="9" data-due=""><td class="t">LAN配信サイトの整理</td><td class="m"></td><td class="du"></td></tr><tr data-id="17" data-due=""><td class="t">AIによるサイト更新監視</td><td class="m">テニス・学校などが候補</td><td class="du"></td></tr><tr data-id="22" data-due="2026-11-17"><td class="t">AIでやることやらないこと決める</td><td class="m"></td><td class="du">11/17</td></tr><tr data-id="50" data-due="2026-11-17"><td class="t">GROK MUSEの活用推進</td><td class="m"></td><td class="du">11/17</td></tr></tbody><tbody data-s="株関連"><tr class="subhead"><th colspan="3"><span class="code">3</span>株関連 <span class="n">1</span></th></tr><tr data-id="49" data-due="2026-12-07"><td class="t">投資ダッシュボード用に11月分のCSVを取り直す</td><td class="m">月末の約定の受渡しが済んでから取る。11月末の約定が載っているか確認する</td><td class="du">12/7</td></tr><tr class="done" data-id="75" data-due="2026-11-16" data-closed="2026-11-16"><td class="t"><span class="ck">✓</span><span class="tx">日本株API環境整備</span></td><td class="m"></td><td class="du">11/16</td></tr></tbody><tbody data-s="妻依頼中"><tr class="subhead"><th colspan="3"><span class="code">5</span>妻依頼中 <span class="n">4</span></th></tr><tr data-id="53" data-due=""><td class="t">冬休みの予定決め</td><td class="m">帰省の予定の前提となる</td><td class="du"></td></tr><tr data-id="54" data-due=""><td class="t">座椅子をメルカリに出す</td><td class="m"></td><td class="du"></td></tr><tr data-id="55" data-due=""><td class="t">iPadをメルカリに出す</td><td class="m"></td><td class="du"></td></tr><tr data-id="56" data-due=""><td class="t">紗奈の英検申し込む</td><td class="m"></td><td class="du"></td></tr></tbody></table></div><div class="view-due" hidden></div></section><section class="panel" id="panel-routine" role="tabpanel" aria-labelledby="tab-routine" hidden><p class="check-msg rt-msg" role="status" hidden></p><div class="rt"><div class="rt-side"><div class="rt-day"></div><section class="rt-card" data-slot="am"><h3>朝ルーティン<span class="n"></span></h3><ul></ul></section><section class="rt-card" data-slot="pm"><h3>夜ルーティン<span class="n"></span></h3><ul></ul></section><section class="rt-card" data-slot="wk"><h3>週のルーティン<span class="n"></span></h3><ul></ul></section></div><div class="rt-cal"><div class="rt-mon"><button type="button" class="rt-nav" data-step="-1" aria-label="前の月">‹</button><h3></h3><button type="button" class="rt-nav" data-step="1" aria-label="次の月">›</button></div><div class="rt-grid"></div><p class="rt-legend"><span><i class="am"></i>朝</span><span><i class="pm"></i>夜</span><span class="lg-wk" hidden><i class="wk"></i>週（右の列は週の達成数）</span><span><i class="full"></i>全部できた日</span><span class="rt-sum"></span></p></div></div><script type="application/json" id="routine-data">{"day_start":4,"routines":[{"id":1,"slot":"am","text":"ウォーキング","from":"2026-11-16","to":""},{"id":2,"slot":"am","text":"体重計測","from":"2026-11-16","to":""},{"id":3,"slot":"am","text":"朝ストレッチ","from":"2026-11-16","to":""},{"id":4,"slot":"pm","text":"肌ケア","from":"2026-11-16","to":""},{"id":5,"slot":"pm","text":"歯ケア","from":"2026-11-16","to":""},{"id":6,"slot":"pm","text":"夜ストレッチ","from":"2026-11-16","to":""},{"id":7,"slot":"wk","text":"パーソナルトレ","from":"2026-11-16","to":""},{"id":8,"slot":"wk","text":"自己トレ","from":"2026-11-16","to":""},{"id":9,"slot":"wk","text":"HIIT","from":"2026-11-16","to":""},{"id":10,"slot":"wk","text":"サウナ（デジタルデトックス）","from":"2026-11-16","to":""}],"log":{"2026-11-16":[2,3],"2026-11-17":[2]}}</script></section><section class="panel" id="panel-wish" role="tabpanel" aria-labelledby="tab-wish" hidden><div class="filters"><button class="filter on" data-f="">すべて <b>10</b></button><button class="filter" data-f="生活">生活 <b>6</b></button><button class="filter" data-f="株関連">株関連 <b>3</b></button><button class="filter" data-f="クリプト関連">クリプト関連 <b>1</b></button></div><table id="wish"><thead><tr><th class="no">No.</th><th class="d sort" data-k="d">登録日</th><th class="t">タイトル</th><th class="m">メモ</th></tr></thead><tbody data-s="生活"><tr class="subhead"><th colspan="4"><span class="code">1</span>生活 <span class="n">6</span></th></tr><tr data-d="2026-10-17T21:44:06+09:00"><td class="no">1-5</td><td class="d"><span class="date">2026/10/17</span></td><td class="t">2027年M1に出る</td><td class="m"></td></tr><tr data-d="2026-10-24T23:07:44+09:00"><td class="no">1-6</td><td class="d"><span class="date">2026/10/24</span></td><td class="t">NOT A HOTELに泊まる</td><td class="m"></td></tr><tr data-d="2026-11-13T17:54:20+09:00"><td class="no">1-34</td><td class="d"><span class="date">2026/11/13</span></td><td class="t">ポーカーを覚える、実践する</td><td class="m"></td></tr><tr data-d="2026-11-13T17:54:23+09:00"><td class="no">1-35</td><td class="d"><span class="date">2026/11/13</span></td><td class="t">ゴルフレッスン（100切り）</td><td class="m"></td></tr><tr data-d="2026-11-13T17:54:26+09:00"><td class="no">1-36</td><td class="d"><span class="date">2026/11/13</span></td><td class="t">格闘技</td><td class="m"></td></tr><tr data-d="2026-11-13T17:54:28+09:00"><td class="no">1-37</td><td class="d"><span class="date">2026/11/13</span></td><td class="t">麻雀を覚える、実践する</td><td class="m"></td></tr></tbody><tbody data-s="株関連"><tr class="subhead"><th colspan="4"><span class="code">3</span>株関連 <span class="n">3</span></th></tr><tr data-d="2026-10-17T13:37:02+09:00"><td class="no">3-2</td><td class="d"><span class="date">2026/10/17</span></td><td class="t">寄り前ノートの再検討</td><td class="m">Grokのツイッターまとめと合わせて作る</td></tr><tr data-d="2026-10-17T13:37:04+09:00"><td class="no">3-3</td><td class="d"><span class="date">2026/10/17</span></td><td class="t">TAKANE活用</td><td class="m">BOT発注</td></tr><tr data-d="2026-10-17T13:37:05+09:00"><td class="no">3-4</td><td class="d"><span class="date">2026/10/17</span></td><td class="t">トラッカーの集約</td><td class="m">200Aだけでなく、いろいろなものをSKHYのようにトラックする</td></tr></tbody><tbody data-s="クリプト関連"><tr class="subhead"><th colspan="4"><span class="code">4</span>クリプト関連 <span class="n">1</span></th></tr><tr data-d="2026-10-17T13:37:06+09:00"><td class="no">4-2</td><td class="d"><span class="date">2026/10/17</span></td><td class="t">DEXマーケットトラッカーの改良</td><td class="m">使えるもの・どう使うかを検討</td></tr></tbody></table></section><section class="panel" id="panel-memo" role="tabpanel" aria-labelledby="tab-memo" hidden><div class="filters"><button class="filter on" data-f="">すべて <b>0</b></button></div><table id="memo"><thead><tr><th class="d sort" data-k="d">登録日</th><th class="g">タグ</th><th class="c">内容</th></tr></thead><tbody><tr class="empty"><td colspan="3">備忘録はまだありません</td></tr></tbody></table></section><section class="panel" id="panel-bookmark" role="tabpanel" aria-labelledby="tab-bookmark" data-order="desc" hidden><div class="filters"></div><table id="bookmark"><thead><tr><th class="d sort" data-k="d">登録日</th><th class="t">タイトル</th><th class="c">内容</th></tr></thead><tbody><tr class="empty"><td colspan="3">読み込み中…</td></tr></tbody></table></section>
+<section class="panel" id="panel-goal" role="tabpanel" aria-labelledby="tab-goal" hidden><p class="check-msg gl-msg" role="status" hidden></p><div class="gl"></div><script type="application/json" id="goal-data">{"goals":[]}</script></section><section class="panel" id="panel-todo" role="tabpanel" aria-labelledby="tab-todo"><div class="views" role="group" aria-label="表示"><button type="button" class="view on" data-view="cat" aria-pressed="true">カテゴリ別</button><button type="button" class="view" data-view="due" aria-pressed="false">期限別</button></div><div class="view-cat"><div class="filters"><button class="filter on" data-f="">すべて <b>30</b></button><button class="filter" data-f="ADMIN">ADMIN <b>2</b></button><button class="filter" data-f="生活">生活 <b>19</b></button><button class="filter" data-f="AI関連">AI関連 <b>4</b></button><button class="filter" data-f="株関連">株関連 <b>1</b></button><button class="filter" data-f="妻依頼中">妻依頼中 <b>4</b></button></div><table id="todo"><thead><tr><th class="t">タイトル</th><th class="m">メモ</th><th class="du">期限</th></tr></thead><tbody data-s="ADMIN"><tr class="subhead"><th colspan="3"><span class="code">0</span>ADMIN <span class="n">2</span></th></tr><tr data-id="4" data-due=""><td class="t">不要サイトの登録内容変更</td><td class="m">セキュリティ対策</td><td class="du"></td></tr><tr class="done" data-id="20" data-due="2026-11-16" data-closed="2026-11-16"><td class="t"><span class="ck">✓</span><span class="tx">みずほ証券</span></td><td class="m"></td><td class="du">11/16</td></tr><tr data-id="38" data-due="2026-11-17"><td class="t">JAM年末調整対応</td><td class="m"></td><td class="du">11/17</td></tr></tbody><tbody data-s="生活"><tr class="subhead"><th colspan="3"><span class="code">1</span>生活 <span class="n">19</span></th></tr><tr data-id="7" data-due=""><td class="t">時計の選定</td><td class="m"></td><td class="du"></td></tr><tr class="done" data-id="40" data-due="2026-11-16" data-closed="2026-11-16"><td class="t"><span class="ck">✓</span><span class="tx">【9-】歯医者</span></td><td class="m"></td><td class="du">11/16</td></tr><tr class="done" data-id="41" data-due="2026-11-16" data-closed="2026-11-16"><td class="t"><span class="ck">✓</span><span class="tx">【11-】テニス</span></td><td class="m"></td><td class="du">11/16</td></tr><tr data-id="43" data-due="2026-11-18"><td class="t">【11-】テニス</td><td class="m"></td><td class="du">11/18</td></tr><tr data-id="44" data-due="2026-11-19"><td class="t">【11-】テニス</td><td class="m"></td><td class="du">11/19</td></tr><tr data-id="45" data-due="2026-11-20"><td class="t">【10-】トレ</td><td class="m"></td><td class="du">11/20</td></tr><tr data-id="48" data-due="2026-11-18"><td class="t">帰省の予定を決める</td><td class="m"></td><td class="du">11/18</td></tr><tr data-id="58" data-due="2026-11-17"><td class="t">【15-】折り紙</td><td class="m"></td><td class="du">11/17</td></tr><tr data-id="63" data-due="2026-11-16"><td class="t">2027年の目標を立てる</td><td class="m"></td><td class="du">11/16</td></tr><tr data-id="64" data-due=""><td class="t">年末のTODOを固めておく</td><td class="m"></td><td class="du"></td></tr><tr class="done" data-id="65" data-due="2026-11-16" data-closed="2026-11-16"><td class="t"><span class="ck">✓</span><span class="tx">ルーティンの追跡方法検討</span></td><td class="m"></td><td class="du">11/16</td></tr><tr data-id="67" data-due="2026-11-18"><td class="t">脇汗対応</td><td class="m"></td><td class="du">11/18</td></tr><tr data-id="68" data-due=""><td class="t">くま対応</td><td class="m"></td><td class="du"></td></tr><tr data-id="69" data-due=""><td class="t">しみ対応</td><td class="m"></td><td class="du"></td></tr><tr data-id="70" data-due="2026-11-19"><td class="t">新居のこれまでのカスタマイズ情報整理</td><td class="m"></td><td class="du">11/19</td></tr><tr class="done" data-id="71" data-due="2026-11-16" data-closed="2026-11-16"><td class="t"><span class="ck">✓</span><span class="tx">12月の予定調整</span></td><td class="m"></td><td class="du">11/16</td></tr><tr class="done" data-id="72" data-due="2026-11-16" data-closed="2026-11-16"><td class="t"><span class="ck">✓</span><span class="tx">鼻毛脱毛予約</span></td><td class="m"></td><td class="du">11/16</td></tr><tr data-id="73" data-due="2026-11-18"><td class="t">セントラルプラン変更</td><td class="m"></td><td class="du">11/18</td></tr><tr data-id="74" data-due="2026-11-18"><td class="t">クマ・シミどっちするか検討</td><td class="m"></td><td class="du">11/18</td></tr><tr data-id="77" data-due="2026-11-24"><td class="t">【11-】テニス</td><td class="m"></td><td class="du">11/24</td></tr><tr data-id="78" data-due="2026-11-25"><td class="t">【11-】テニス</td><td class="m"></td><td class="du">11/25</td></tr><tr data-id="79" data-due="2026-11-26"><td class="t">【11-】テニス</td><td class="m"></td><td class="du">11/26</td></tr><tr data-id="80" data-due="2026-11-27"><td class="t">【10-】トレ</td><td class="m"></td><td class="du">11/27</td></tr><tr data-id="81" data-due="2026-11-17"><td class="t">大掃除の日程を入れる</td><td class="m"></td><td class="du">11/17</td></tr></tbody><tbody data-s="AI関連"><tr class="subhead"><th colspan="3"><span class="code">2</span>AI関連 <span class="n">4</span></th></tr><tr data-id="9" data-due=""><td class="t">LAN配信サイトの整理</td><td class="m"></td><td class="du"></td></tr><tr data-id="17" data-due=""><td class="t">AIによるサイト更新監視</td><td class="m">テニス・学校などが候補</td><td class="du"></td></tr><tr data-id="22" data-due="2026-11-17"><td class="t">AIでやることやらないこと決める</td><td class="m"></td><td class="du">11/17</td></tr><tr data-id="50" data-due="2026-11-17"><td class="t">GROK MUSEの活用推進</td><td class="m"></td><td class="du">11/17</td></tr></tbody><tbody data-s="株関連"><tr class="subhead"><th colspan="3"><span class="code">3</span>株関連 <span class="n">1</span></th></tr><tr data-id="49" data-due="2026-12-07"><td class="t">投資ダッシュボード用に11月分のCSVを取り直す</td><td class="m">月末の約定の受渡しが済んでから取る。11月末の約定が載っているか確認する</td><td class="du">12/7</td></tr><tr class="done" data-id="75" data-due="2026-11-16" data-closed="2026-11-16"><td class="t"><span class="ck">✓</span><span class="tx">日本株API環境整備</span></td><td class="m"></td><td class="du">11/16</td></tr></tbody><tbody data-s="妻依頼中"><tr class="subhead"><th colspan="3"><span class="code">5</span>妻依頼中 <span class="n">4</span></th></tr><tr data-id="53" data-due=""><td class="t">冬休みの予定決め</td><td class="m">帰省の予定の前提となる</td><td class="du"></td></tr><tr data-id="54" data-due=""><td class="t">座椅子をメルカリに出す</td><td class="m"></td><td class="du"></td></tr><tr data-id="55" data-due=""><td class="t">iPadをメルカリに出す</td><td class="m"></td><td class="du"></td></tr><tr data-id="56" data-due=""><td class="t">紗奈の英検申し込む</td><td class="m"></td><td class="du"></td></tr></tbody></table></div><div class="view-due" hidden></div></section><section class="panel" id="panel-routine" role="tabpanel" aria-labelledby="tab-routine" hidden><p class="check-msg rt-msg" role="status" hidden></p><div class="rt"><div class="rt-side"><div class="rt-day"></div><section class="rt-card" data-slot="am"><h3>朝ルーティン<span class="n"></span></h3><ul></ul></section><section class="rt-card" data-slot="pm"><h3>夜ルーティン<span class="n"></span></h3><ul></ul></section><section class="rt-card" data-slot="wk"><h3>週のルーティン<span class="n"></span></h3><ul></ul></section></div><div class="rt-cal"><div class="rt-mon"><button type="button" class="rt-nav" data-step="-1" aria-label="前の月">‹</button><h3></h3><button type="button" class="rt-nav" data-step="1" aria-label="次の月">›</button></div><div class="rt-grid"></div><p class="rt-legend"><span><i class="am"></i>朝</span><span><i class="pm"></i>夜</span><span class="lg-wk" hidden><i class="wk"></i>週（右の列は週の達成数）</span><span><i class="full"></i>全部できた日</span><span class="rt-sum"></span></p></div></div><script type="application/json" id="routine-data">{"day_start":4,"routines":[{"id":1,"slot":"am","text":"ウォーキング","from":"2026-11-16","to":""},{"id":2,"slot":"am","text":"体重計測","from":"2026-11-16","to":""},{"id":3,"slot":"am","text":"朝ストレッチ","from":"2026-11-16","to":""},{"id":4,"slot":"pm","text":"肌ケア","from":"2026-11-16","to":""},{"id":5,"slot":"pm","text":"歯ケア","from":"2026-11-16","to":""},{"id":6,"slot":"pm","text":"夜ストレッチ","from":"2026-11-16","to":""},{"id":7,"slot":"wk","text":"パーソナルトレ","from":"2026-11-16","to":""},{"id":8,"slot":"wk","text":"自己トレ","from":"2026-11-16","to":""},{"id":9,"slot":"wk","text":"HIIT","from":"2026-11-16","to":""},{"id":10,"slot":"wk","text":"サウナ（デジタルデトックス）","from":"2026-11-16","to":""}],"log":{"2026-11-16":[2,3],"2026-11-17":[2]}}</script></section><section class="panel" id="panel-wish" role="tabpanel" aria-labelledby="tab-wish" hidden><div class="filters"><button class="filter on" data-f="">すべて <b>10</b></button><button class="filter" data-f="生活">生活 <b>6</b></button><button class="filter" data-f="株関連">株関連 <b>3</b></button><button class="filter" data-f="クリプト関連">クリプト関連 <b>1</b></button></div><table id="wish"><thead><tr><th class="no">No.</th><th class="d sort" data-k="d">登録日</th><th class="t">タイトル</th><th class="m">メモ</th></tr></thead><tbody data-s="生活"><tr class="subhead"><th colspan="4"><span class="code">1</span>生活 <span class="n">6</span></th></tr><tr data-d="2026-10-17T21:44:06+09:00"><td class="no">1-5</td><td class="d"><span class="date">2026/10/17</span></td><td class="t">2027年M1に出る</td><td class="m"></td></tr><tr data-d="2026-10-24T23:07:44+09:00"><td class="no">1-6</td><td class="d"><span class="date">2026/10/24</span></td><td class="t">NOT A HOTELに泊まる</td><td class="m"></td></tr><tr data-d="2026-11-13T17:54:20+09:00"><td class="no">1-34</td><td class="d"><span class="date">2026/11/13</span></td><td class="t">ポーカーを覚える、実践する</td><td class="m"></td></tr><tr data-d="2026-11-13T17:54:23+09:00"><td class="no">1-35</td><td class="d"><span class="date">2026/11/13</span></td><td class="t">ゴルフレッスン（100切り）</td><td class="m"></td></tr><tr data-d="2026-11-13T17:54:26+09:00"><td class="no">1-36</td><td class="d"><span class="date">2026/11/13</span></td><td class="t">格闘技</td><td class="m"></td></tr><tr data-d="2026-11-13T17:54:28+09:00"><td class="no">1-37</td><td class="d"><span class="date">2026/11/13</span></td><td class="t">麻雀を覚える、実践する</td><td class="m"></td></tr></tbody><tbody data-s="株関連"><tr class="subhead"><th colspan="4"><span class="code">3</span>株関連 <span class="n">3</span></th></tr><tr data-d="2026-10-17T13:37:02+09:00"><td class="no">3-2</td><td class="d"><span class="date">2026/10/17</span></td><td class="t">寄り前ノートの再検討</td><td class="m">Grokのツイッターまとめと合わせて作る</td></tr><tr data-d="2026-10-17T13:37:04+09:00"><td class="no">3-3</td><td class="d"><span class="date">2026/10/17</span></td><td class="t">TAKANE活用</td><td class="m">BOT発注</td></tr><tr data-d="2026-10-17T13:37:05+09:00"><td class="no">3-4</td><td class="d"><span class="date">2026/10/17</span></td><td class="t">トラッカーの集約</td><td class="m">200Aだけでなく、いろいろなものをSKHYのようにトラックする</td></tr></tbody><tbody data-s="クリプト関連"><tr class="subhead"><th colspan="4"><span class="code">4</span>クリプト関連 <span class="n">1</span></th></tr><tr data-d="2026-10-17T13:37:06+09:00"><td class="no">4-2</td><td class="d"><span class="date">2026/10/17</span></td><td class="t">DEXマーケットトラッカーの改良</td><td class="m">使えるもの・どう使うかを検討</td></tr></tbody></table></section><section class="panel" id="panel-memo" role="tabpanel" aria-labelledby="tab-memo" hidden><div class="filters"><button class="filter on" data-f="">すべて <b>0</b></button></div><table id="memo"><thead><tr><th class="d sort" data-k="d">登録日</th><th class="g">タグ</th><th class="c">内容</th></tr></thead><tbody><tr class="empty"><td colspan="3">備忘録はまだありません</td></tr></tbody></table></section><section class="panel" id="panel-bookmark" role="tabpanel" aria-labelledby="tab-bookmark" data-order="desc" hidden><div class="filters"></div><table id="bookmark"><thead><tr><th class="d sort" data-k="d">登録日</th><th class="t">タイトル</th><th class="c">内容</th></tr></thead><tbody><tr class="empty"><td colspan="3">読み込み中…</td></tr></tbody></table></section>
 </main>
 <script>
 (() => {
@@ -355,8 +436,9 @@
   // 画面の幅が1400pxをまたいだら、期限別を並べ直す（2列⇔3列）
   const relayout = () => { if (view === "due") renderDue(todoPanel.querySelector(".view-due")); };
   if (WIDE3) { if (WIDE3.addEventListener) WIDE3.addEventListener("change", relayout); else if (WIDE3.addListener) WIDE3.addListener(relayout); }
-  // TODO／やりたい事／備忘録のタブ。URLの #todo / #due / #wish / #memo で開くタブが決まる
+  // 年次目標／TODO／ルーティン／やりたい事／備忘録のタブ。URLの #goal / #todo / #due / #routine / #wish / #memo で開くタブが決まる（既定はTODO）
   const tabs = [...document.querySelectorAll(".tab[data-tab]")];
+  const tabHooks = {};  // タブを開いたときに呼ぶ処理（年次目標の、まだ祝っていない達成の祝い）。各タブの台本が後から登録する
   const fromHash = () => tabs.some(t => "#" + t.dataset.tab === location.hash) ? location.hash.slice(1) : "todo";
   const hashOf = name => name === "todo" && view === "due" ? "#due" : "#" + name;
   const show = (name, focus) => {
@@ -374,6 +456,7 @@
       }
     });
     syncWide();
+    if (tabHooks[name]) tabHooks[name]();
   };
   tabs.forEach((t, i) => {
     t.addEventListener("click", () => { show(t.dataset.tab); history.replaceState(null, "", hashOf(t.dataset.tab)); });
@@ -406,7 +489,7 @@
   // 操作の途中なら「新しい内容があります」のボタンを出し、押せばすぐ読み直す。読み直してもキャッシュで古い版が返ったときは、
   // 同じ版へは2分あけて3回まで自動で試す（堂々巡りの防止。試した版・回数・時刻を sessionStorage に残す）
   const PAGE_VER = (document.querySelector(".asof") || {dataset: {}}).dataset.v || "";
-  const RELOAD_KEY = "todo-reload-for", FILTER_KEY = "todo-filters", ROUTINE_KEY = "todo-routine";
+  const RELOAD_KEY = "todo-reload-for", FILTER_KEY = "todo-filters", ROUTINE_KEY = "todo-routine", GOAL_KEY = "todo-goal-year";
   const RETURN_IDLE = 3000, TICK_IDLE = 60000, CHECK_GAP = 15000, RETRY_GAP = 120000, RETRY_MAX = 3;
   const triedFor = () => {
     try { return JSON.parse(sessionStorage.getItem(RELOAD_KEY) || "null") || {}; } catch (e) { return {}; }
@@ -434,6 +517,9 @@
       // ルーティンで今日以外の日・別の月を見ていたら、読み直してもそこを開く
       const rs = routine && routine.state();
       if (rs && (rs.sel !== rs.today || rs.month !== rs.today.slice(0, 7))) sessionStorage.setItem(ROUTINE_KEY, JSON.stringify(rs));
+      // 年次目標で、最初に見せる年と別の年を見ていたら、読み直してもその年を開く
+      const gy = goals && goals.state();
+      if (gy) sessionStorage.setItem(GOAL_KEY, String(gy));
     } catch (e) {}
     location.reload();
   };
@@ -710,6 +796,335 @@
       state: () => ({sel, month, today}),
     };
   })();
+  // 年次目標（2026-11-17 殿の依頼）: 年ごとの目標。できたらチェックし、達成したら紙吹雪・「達成！」の表示・効果音で祝う
+  // （普通のタスクより難しいので「できたらドーパミン出る仕様」に）。達成した目標は金色のカードで残す。
+  // 別の端末やAIが付けた達成も、このブラウザで初めて見たときに、タブを開いたところで祝う（タブに NEW の印）。
+  // 祝った達成は localStorage の goal-seen に目標ごとの達成日で覚える（初めて開いたブラウザでは、それまでの達成は祝わない）。
+  // 効果音は goal-sound、演出（紙吹雪と動き）は goal-motion で切り替える（どちらも既定は出す）。
+  // 演出はOSの「視差効果を減らす」に合わせない。殿のMacはこの設定が有効で、合わせると紙吹雪が出ないため（2026-11-17）。
+  // 控えめにしたいときはページの「演出ひかえめ」で切り替える
+  const goals = (() => {
+    const panel = document.getElementById("panel-goal"), src = document.getElementById("goal-data");
+    if (!panel || !src) return null;
+    let G = {};
+    try { G = JSON.parse(src.textContent) || {}; } catch (e) {}
+    const DAY = /^[0-9]{4}-[0-9]{2}-[0-9]{2}$/;
+    const list = (Array.isArray(G.goals) ? G.goals : []).filter(g => g && typeof g.id === "number" && Number.isInteger(g.year) && typeof g.text === "string");
+    const done = new Map(list.map(g => [g.id, typeof g.done === "string" && DAY.test(g.done) ? g.done : ""]));  // 目標 → 達成日（未達成は空）
+    const years = [...new Set(list.map(g => g.year))].sort((a, b) => a - b);
+    const box = panel.querySelector(".gl"), msg = panel.querySelector(".gl-msg"), tab = document.getElementById("tab-goal");
+    const say = text => { msg.textContent = text; msg.hidden = !text; };
+    const jstDay = ms => new Intl.DateTimeFormat("en-CA", {timeZone: "Asia/Tokyo", year: "numeric", month: "2-digit", day: "2-digit"}).format(new Date(ms));
+    // 最初に見せる年: 今年の目標があれば今年、なければこれからの年でいちばん近い年、それもなければいちばん新しい年（CLIと同じ）
+    const defaultYear = () => { const y = Number(todayJst().slice(0, 4)); return years.includes(y) ? y : (years.find(x => x > y) || years[years.length - 1]); };
+    let year = defaultYear(), push = null, ringFrom = null;
+    try {  // 自動で読み直したときは、前に見ていた年を開く
+      const s = Number(sessionStorage.getItem(GOAL_KEY));
+      sessionStorage.removeItem(GOAL_KEY);
+      if (years.includes(s)) year = s;
+    } catch (e) {}
+    const ofYear = y => list.filter(g => g.year === y);
+    const tallyOf = y => { const gs = ofYear(y); return {done: gs.filter(g => done.get(g.id)).length, all: gs.length}; };
+    const pctOf = t => t.all ? Math.round(100 * t.done / t.all) : 0;
+    const days = (a, b) => Math.round((Date.parse(b + "T00:00:00Z") - Date.parse(a + "T00:00:00Z")) / 86400000);
+    const md = d => Number(d.slice(5, 7)) + "/" + Number(d.slice(8, 10));
+    const SOUND_KEY = "goal-sound", MOTION_KEY = "goal-motion", SEEN_KEY = "goal-seen";
+    let sound = true, motion = true, seen = null;
+    try { sound = localStorage.getItem(SOUND_KEY) !== "off"; motion = localStorage.getItem(MOTION_KEY) !== "off"; } catch (e) {}
+    document.body.classList.toggle("gl-calm", !motion);
+    try { const v = JSON.parse(localStorage.getItem(SEEN_KEY)); if (v && typeof v === "object" && !Array.isArray(v)) seen = v; } catch (e) {}
+    const saveSeen = () => { try { localStorage.setItem(SEEN_KEY, JSON.stringify(seen)); } catch (e) {} };
+    if (!seen) {  // 初めて開いたブラウザでは、それまでの達成を祝わない
+      seen = {};
+      list.forEach(g => { if (done.get(g.id)) seen[g.id] = done.get(g.id); });
+      saveSeen();
+    }
+    const pending = () => list.filter(g => done.get(g.id) && seen[g.id] !== done.get(g.id));
+    // タブと見出しの件数は、最初に見せる年の 達成数/目標の数。まだ祝っていない達成があればタブに NEW を付ける
+    const updateCounts = () => {
+      const t = years.length ? tallyOf(defaultYear()) : {done: 0, all: 0};
+      const n = tab && tab.querySelector(".n"), head = document.getElementById("n-goal");
+      if (n) n.textContent = t.all ? t.done + "/" + t.all : "0";
+      if (head) head.textContent = t.all ? "達成 " + t.done + "/" + t.all : "0件";
+      if (!tab) return;
+      let dot = tab.querySelector(".gl-new");
+      if (pending().length && !dot) tab.appendChild(make("span", "gl-new", "NEW"));
+      if (!pending().length && dot) dot.remove();
+    };
+    // 達成率の輪。祝うときは前の割合から伸ばす（ringFrom）
+    const NS = "http://www.w3.org/2000/svg", R = 40, C = 2 * Math.PI * R;
+    const ring = pct => {
+      const wrap = make("div", "gl-ring"), svg = document.createElementNS(NS, "svg"), from = ringFrom == null ? pct : ringFrom;
+      ringFrom = null;
+      svg.setAttribute("viewBox", "0 0 100 100"); svg.setAttribute("aria-hidden", "true");
+      const circle = cls => {
+        const c = document.createElementNS(NS, "circle");
+        c.setAttribute("class", cls); c.setAttribute("cx", "50"); c.setAttribute("cy", "50"); c.setAttribute("r", String(R));
+        svg.appendChild(c);
+        return c;
+      };
+      circle("bg");
+      const fg = circle("fg"), at = p => { fg.setAttribute("stroke-dashoffset", String(C * (1 - p / 100))); fg.style.opacity = p ? "1" : "0"; };
+      fg.setAttribute("stroke-dasharray", String(C));
+      at(from);
+      if (from !== pct) requestAnimationFrame(() => requestAnimationFrame(() => at(pct)));
+      wrap.append(svg, make("span", "pct", pct + "%"));
+      wrap.setAttribute("role", "img"); wrap.setAttribute("aria-label", "達成率 " + pct + "%");
+      return wrap;
+    };
+    const render = () => {
+      updateCounts();
+      if (!years.length) { box.replaceChildren(make("p", "gl-empty", "年次目標はまだありません")); return; }
+      const y = year, t = tallyOf(y), today = todayJst(), ty = Number(today.slice(0, 4)), pct = pctOf(t), at = years.indexOf(y);
+      // 見出し: 年（目標のある年が2つ以上なら前後へ移れる）と効果音の切り替え
+      const head = make("div", "gl-head");
+      const nav = (step, name, text) => {
+        const b = make("button", "rt-nav", text);
+        b.type = "button"; b.setAttribute("aria-label", name); b.disabled = !years[at + step];
+        b.addEventListener("click", () => { if (years[at + step]) { year = years[at + step]; render(); } });
+        return b;
+      };
+      if (years.length > 1) head.appendChild(nav(-1, "前の年", "‹"));
+      head.appendChild(make("h3", null, y + "年の目標"));
+      if (years.length > 1) head.appendChild(nav(1, "次の年", "›"));
+      // 達成したときの演出（紙吹雪と動き）と効果音の切り替え。このブラウザにだけ覚える
+      const opts = make("div", "gl-opts");
+      const opt = (on, yes, no, title, flip) => {
+        const b = make("button", "gl-opt", on ? yes : no);
+        b.type = "button"; b.title = title; b.setAttribute("aria-pressed", on ? "true" : "false");
+        b.addEventListener("click", () => { flip(); render(); });
+        opts.appendChild(b);
+      };
+      opt(motion, "🎉 演出あり", "演出ひかえめ", "達成したときの紙吹雪と動き", () => {
+        motion = !motion;
+        document.body.classList.toggle("gl-calm", !motion);
+        try { localStorage.setItem(MOTION_KEY, motion ? "on" : "off"); } catch (e) {}
+      });
+      opt(sound, "🔔 音あり", "🔕 音なし", "達成したときの効果音", () => {
+        sound = !sound;
+        try { localStorage.setItem(SOUND_KEY, sound ? "on" : "off"); } catch (e) {}
+      });
+      head.appendChild(opts);
+      // 進み具合: 輪（達成率）・達成数・メダル（目標ごと）・年の残り日数と経過
+      const hero = make("div", "gl-hero"), stat = make("div", "gl-stat"), big = make("div", "gl-big"), medals = make("div", "gl-medals");
+      big.append(make("span", null, "達成"), make("b", null, String(t.done)), make("span", null, "/ " + t.all));
+      if (t.all && t.done === t.all) big.appendChild(make("span", "gl-all", "全部達成！"));
+      else if (t.all) big.appendChild(make("span", "gl-left", "あと" + (t.all - t.done) + "個"));
+      ofYear(y).forEach(g => { const i = make("i", done.get(g.id) ? "on" : null); i.title = g.text; medals.appendChild(i); });
+      stat.append(big, medals);
+      if (y > ty) stat.appendChild(make("div", "gl-time", y + "年まで あと" + days(today, y + "-01-01") + "日"));
+      else if (y < ty) stat.appendChild(make("div", "gl-time", y + "年は終わりました"));
+      else {
+        const all = days(y + "-01-01", (y + 1) + "-01-01"), gone = days(y + "-01-01", today), elapsed = Math.round(100 * gone / all);
+        const line = make("div", "gl-time", "残り" + (all - gone) + "日・年の経過 " + elapsed + "%");
+        if (t.done && pct >= elapsed) line.appendChild(make("span", "gl-pace", "ペース以上"));
+        const bar = make("div", "gl-bar time"), fill = make("b");
+        fill.style.width = elapsed + "%"; bar.appendChild(fill);
+        stat.append(line, bar);
+      }
+      hero.append(ring(pct), stat);
+      // 目標のカード（登録の並び）。達成した目標は金色にして、達成日とトロフィーを付ける
+      const ol = make("ol", "gl-list");
+      ofYear(y).forEach((g, i) => {
+        const d = done.get(g.id), li = make("li", "gl-card" + (d ? " done" : "")), body = make("div", "gl-body");
+        li.dataset.gid = g.id;
+        body.appendChild(make("span", "gl-tx", g.text));
+        if (typeof g.note === "string" && g.note) body.appendChild(make("span", "gl-note", g.note));
+        if (d) body.appendChild(make("span", "gl-date", (Number(d.slice(0, 4)) === y ? md(d) : d.split("-").join("/")) + " 達成"));
+        if (push) {
+          const lab = make("label", "gl-check"), cb = make("input", "gl-cb");
+          cb.type = "checkbox"; cb.checked = !!d; cb.dataset.gid = g.id; cb.setAttribute("aria-label", g.text);
+          lab.appendChild(cb); li.appendChild(lab);
+        } else {
+          li.appendChild(make("span", "gl-mark", d ? "✓" : ""));
+        }
+        li.append(make("span", "gl-no", String(i + 1).padStart(2, "0")), body);
+        if (d) li.appendChild(make("span", "gl-trophy", "🏆"));
+        ol.appendChild(li);
+      });
+      box.replaceChildren(head, hero, ol);
+    };
+    // ---- 祝い（紙吹雪・効果音・振動・「達成！」の表示）。「演出ひかえめ」のときは紙吹雪と動きを出さない
+    const COLORS = ["#f5b301", "#ffd34d", "#2a78d6", "#1baf7a", "#e34948", "#4a3aa7", "#e87ba4", "#c98500"];
+    const confetti = (x, y, all) => {
+      if (!motion) return;
+      const cv = make("canvas", "gl-confetti"), ctx = cv.getContext && cv.getContext("2d");
+      if (!ctx) return;
+      const W = window.innerWidth, H = window.innerHeight, dpr = Math.min(2, window.devicePixelRatio || 1);
+      cv.width = W * dpr; cv.height = H * dpr; ctx.scale(dpr, dpr);
+      document.body.appendChild(cv);
+      const parts = [], rnd = (a, b) => a + Math.random() * (b - a);
+      const add = (px, py, vx, vy) => parts.push({x: px, y: py, vx, vy, r: rnd(0, 6.3), vr: rnd(-.25, .25), w: rnd(6, 12), h: rnd(4, 9),
+        c: COLORS[Math.floor(Math.random() * COLORS.length)]});
+      for (let i = 0; i < (all ? 240 : 150); i++) { const a = rnd(0, 6.3), s = rnd(4, 13); add(x, y, Math.cos(a) * s, Math.sin(a) * s - 5); }
+      for (let i = 0; i < (all ? 180 : 80); i++) add(rnd(0, W), rnd(-H * .6, -10), rnd(-1, 1), rnd(1, 4));
+      // 動きは経過時間で進める（描画の回数が落ちる端末でも、同じ時間で同じだけ広がるように）
+      const life = all ? 5500 : 3400, t0 = performance.now();
+      let last = t0;
+      const step = now => {
+        const k = now - t0, fade = Math.min(1, Math.max(0, (life - k) / 700)), f = Math.min(4, Math.max(0, (now - last) / 16.7));
+        last = now;
+        ctx.clearRect(0, 0, W, H);
+        ctx.globalAlpha = fade;
+        parts.forEach(p => {
+          const drag = Math.pow(.985, f);
+          p.vx *= drag; p.vy = Math.min(p.vy * drag + .22 * f, 6); p.x += p.vx * f; p.y += p.vy * f; p.r += p.vr * f;
+          ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.r); ctx.fillStyle = p.c;
+          ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h * Math.abs(Math.cos(p.r * 2)) + 1);
+          ctx.restore();
+        });
+        if (k < life) requestAnimationFrame(step); else cv.remove();
+      };
+      requestAnimationFrame(step);
+    };
+    // 音の準備。チェックやタブを押した操作の中で呼ぶ（操作の外では、ブラウザが音を止めたままにするため）
+    let actx = null;
+    const audio = () => {
+      if (!sound) return null;
+      try {
+        const AC = window.AudioContext || window.webkitAudioContext;
+        if (!AC) return null;
+        actx = actx || new AC();
+        if (actx.state === "suspended") actx.resume().catch(() => {});
+        return actx;
+      } catch (e) { return null; }
+    };
+    // ド・ミ・ソ・ドの短いファンファーレ（全部達成は長め）。音のファイルは使わない。
+    // 操作の外（#goal で開いた直後など）で音が止められているときは鳴らさない（後のクリックで急に鳴らないように。2026-11-17 レビューの指摘）
+    const fanfare = all => {
+      const ac = audio();
+      if (!ac) return;
+      const asked = Date.now();
+      if (ac.state === "running") play(ac, all);
+      else ac.resume().then(() => { if (Date.now() - asked < 800) play(ac, all); }).catch(() => {});
+    };
+    const play = (ac, all) => {
+      try {
+        const t0 = ac.currentTime + .03;
+        const notes = all
+          ? [[523.25, 0, .14], [659.25, .13, .14], [783.99, .26, .14], [1046.5, .39, .22], [783.99, .62, .12], [1046.5, .75, .9], [659.25, .75, .9], [1318.5, .75, .9]]
+          : [[523.25, 0, .13], [659.25, .11, .13], [783.99, .22, .13], [1046.5, .34, .7], [659.25, .34, .7]];
+        notes.forEach(([f, at, len]) => {
+          const o = ac.createOscillator(), g = ac.createGain();
+          o.type = "triangle"; o.frequency.value = f;
+          g.gain.setValueAtTime(.0001, t0 + at);
+          g.gain.exponentialRampToValueAtTime(.18, t0 + at + .02);
+          g.gain.exponentialRampToValueAtTime(.0001, t0 + at + len);
+          o.connect(g); g.connect(ac.destination);
+          o.start(t0 + at); o.stop(t0 + at + len + .05);
+        });
+      } catch (e) {}
+    };
+    let cheerBox = null, cheerTimer = 0;
+    const hideCheer = () => { clearTimeout(cheerTimer); if (cheerBox) cheerBox.hidden = true; };
+    const showCheer = (title, text, sub, all, from, to) => {
+      if (!cheerBox) {
+        cheerBox = make("div", "gl-cheer");
+        cheerBox.setAttribute("role", "status");
+        cheerBox.addEventListener("click", hideCheer);
+        document.addEventListener("keydown", e => { if (e.key === "Escape") hideCheer(); });
+        document.body.appendChild(cheerBox);
+      }
+      const card = make("div", "gl-cheer-card" + (all ? " all" : "")), bar = make("div", "gl-bar"), fill = make("b");
+      fill.style.width = from + "%"; bar.appendChild(fill);
+      card.append(make("div", "gl-cheer-icon", all ? "👑" : "🏆"), make("div", "gl-cheer-title", title), make("div", "gl-cheer-text", text),
+        make("div", "gl-cheer-sub", sub), bar, make("div", "gl-cheer-close", "タップで閉じる"));
+      cheerBox.replaceChildren(card); cheerBox.hidden = false;
+      requestAnimationFrame(() => requestAnimationFrame(() => { fill.style.width = to + "%"; }));
+      clearTimeout(cheerTimer); cheerTimer = setTimeout(hideCheer, all ? 7000 : 4500);
+    };
+    // gs: 祝う目標（1つ以上。同じ年）、from: 祝う前の達成率、others: ほかの年で一緒に祝う数。最後の目標の年を開き、そのカードから紙吹雪を出す
+    const celebrate = (gs, from, others) => {
+      const g = gs[gs.length - 1], t = tallyOf(g.year), all = t.all > 0 && t.done === t.all;
+      year = g.year; ringFrom = from; render();
+      const card = panel.querySelector('.gl-card[data-gid="' + g.id + '"]');
+      let x = window.innerWidth / 2, y = window.innerHeight / 3;
+      if (card) {
+        const r = card.getBoundingClientRect();
+        x = Math.min(window.innerWidth, Math.max(0, r.left + 24)); y = Math.min(window.innerHeight, Math.max(0, r.top + r.height / 2));
+        card.classList.add("pop");
+      }
+      confetti(x, y, all); fanfare(all);
+      try { if (navigator.vibrate) navigator.vibrate(all ? [80, 60, 80, 60, 240] : [60, 40, 140]); } catch (e) {}
+      showCheer(all ? "全部達成！" : "達成！", gs.map(x => x.text).join("、") + (others ? "（ほかの年も" + others + "つ）" : ""),
+        g.year + "年の目標 " + t.done + "/" + t.all + (all ? "　最高の1年です" : "（あと" + (t.all - t.done) + "個）"), all, from, pctOf(t));
+    };
+    // まだ祝っていない達成（別の端末・AIが付けたもの）は、このタブを開いたときに祝う。
+    // 鍵のあるブラウザでは、未取り込みの操作（checks.json）を重ねるまで待つ（held）。重ねる前に祝うと、
+    // 別の端末で取り消した目標まで祝うため（2026-11-17 レビューの指摘）
+    let held = false;
+    const celebratePending = () => {
+      const p = pending();
+      if (!p.length || panel.hidden || held) return;
+      // 見ている年の分があればその年、なければ最後の目標の年を祝う。ほかの年の分は数だけ添える
+      const y = p.some(x => x.year === year) ? year : p[p.length - 1].year, mine = p.filter(x => x.year === y), t = tallyOf(y);
+      p.forEach(x => { seen[x.id] = done.get(x.id); });
+      saveSeen(); updateCounts();
+      setTimeout(() => {
+        const still = mine.filter(g => done.get(g.id)), t2 = tallyOf(y);  // 待つ間に取り消された目標は祝わない
+        if (still.length) celebrate(still, t2.all ? Math.round(100 * (t2.done - still.length) / t2.all) : 0, p.length - mine.length);
+      }, 300);
+    };
+    tabHooks.goal = () => { if (pending().length) audio(); celebratePending(); };  // タブを押した操作の中で音を準備する
+    // チェック（鍵のあるブラウザだけ）。失敗したら保存できた最後の状態へ戻す（ルーティンと同じ考え方）
+    const seq = new Map(), saved = new Map();  // 目標ごとの 操作の通し番号／保存できた達成日
+    panel.addEventListener("change", e => {
+      const cb = e.target;
+      if (!push || !cb.matches("input.gl-cb[data-gid]")) return;
+      const gid = Number(cb.dataset.gid), on = cb.checked, g = list.find(x => x.id === gid);
+      if (!g) return;
+      // 達成の取り消しは押し間違いで消えないよう確かめる
+      if (!on && !window.confirm("「" + g.text + "」の達成を取り消しますか？")) { cb.checked = true; return; }
+      const n = (seq.get(gid) || 0) + 1, day = todayJst(), from = pctOf(tallyOf(g.year));
+      seq.set(gid, n);
+      if (!saved.has(gid)) saved.set(gid, done.get(gid) || "");
+      done.set(gid, on ? day : "");
+      say("");
+      if (on) seen[gid] = day; else delete seen[gid];
+      saveSeen();
+      if (on) celebrate([g], from); else render();
+      const again = panel.querySelector('input.gl-cb[data-gid="' + gid + '"]');  // 作り直したあとも同じ箱にフォーカスを残す
+      if (again) again.focus({preventScroll: true});
+      push({gid, done: on, at: new Date().toISOString()}).then(() => { saved.set(gid, on ? day : ""); }).catch(err => {
+        if (seq.get(gid) === n) {
+          const back = saved.get(gid);
+          done.set(gid, back);
+          if (back) { seen[gid] = back; saveSeen(); }
+          hideCheer(); render();
+          document.querySelectorAll(".gl-confetti").forEach(c => c.remove());
+        }
+        say(/HTTP 40[134]/.test(err.message) ? "保存できませんでした。鍵が無効か期限切れです（URLの末尾を #key にすると入れ直せます）。"
+          : "保存できませんでした。通信を確認して、もう一度押してください。");
+      });
+    });
+    render();
+    setTimeout(celebratePending, 0);  // チェックボタンの台本（同じ流れで後に動く）が hold を呼んだあとに回す
+    return {
+      // 鍵のあるブラウザだけ、チェックボタンを出して push で送る（送り先・やり直しはチェックボタンの台本と同じ）
+      enable: fn => { push = fn; render(); },
+      // Macが取り込む前の操作と、取り込みがこのページより後の操作を重ねる（TODO・ルーティンのチェックと同じ考え方）
+      overlay: (events, built) => {
+        const touched = new Set();
+        events.forEach(ev => {
+          if (!ev || typeof ev.gid !== "number" || !done.has(ev.gid)) return;
+          const applied = ev.applied_at ? Date.parse(ev.applied_at) : NaN;
+          if (!isNaN(applied) && !isNaN(built) && built >= applied) return;
+          const at = Date.parse(ev.at);
+          done.set(ev.gid, ev.done === true ? (done.get(ev.gid) || (isNaN(at) ? todayJst() : jstDay(at))) : "");
+          touched.add(ev.gid);
+        });
+        // 取り消されたままの目標は「祝った」の記憶も消す（同じ日にまた達成したら祝えるように。2026-11-17 レビューの指摘）
+        touched.forEach(id => { if (!done.get(id)) delete seen[id]; });
+        saveSeen();
+        held = false; render(); celebratePending();
+      },
+      // 鍵のあるブラウザ: 重ね合わせ（overlay）まで祝いを待つ。読めなかったら release で待つのをやめる
+      hold: () => { held = true; },
+      release: () => { held = false; updateCounts(); celebratePending(); },
+      // 最初に見せる年と別の年を見ていれば、その年（読み直したときに開き直す）
+      state: () => years.length && year !== defaultYear() ? year : null,
+    };
+  })();
   // セクション（備忘録はタグ）の絞り込みはタブの中だけで効く。表をあとから作るタブは作ったあとに呼ぶ
   const wireFilters = panel => {
     const filters = panel.querySelectorAll(".filter");
@@ -983,8 +1398,8 @@
     });
     chips.find(b => !b.dataset.f).querySelector("b").textContent = total;
     document.querySelector("#tab-todo .n").textContent = total;
-    const head = document.querySelector(".count").firstChild;
-    head.nodeValue = head.nodeValue.replace(/^TODO \d+件/, "TODO " + total + "件");
+    const head = [...document.querySelector(".count").childNodes].find(x => x.nodeType === 3 && /TODO \d+件/.test(x.nodeValue));
+    if (head) head.nodeValue = head.nodeValue.replace(/TODO \d+件/, "TODO " + total + "件");
   };
   const refresh = () => { recount(); if (view === "due") renderDue(todoPanel.querySelector(".view-due")); };
   const addBoxes = () => todoPanel.querySelectorAll(".view-cat tr[data-id]").forEach(tr => {
@@ -1027,30 +1442,32 @@
     });
   }
   if (checkKey) {
+    if (goals) goals.hold();  // 未取り込みの操作を重ねるまで、年次目標の祝いを待つ
     readChecks().then(({events}) => {
       addBoxes();
       // Macが取り込む前の操作と、公開ページの更新が届く前の操作を画面に重ねる。取り込み済みの操作は、このページが
       // その取り込みより前に作られたときだけ重ねる（取り込んだあとにAIが戻した状態を、古い操作で上書きして見せないため。2026-11-13）
       const built = Date.parse(PAGE_VER);
       events.forEach(ev => {
-        const tr = ev && ev.rid === undefined && rowById(Number(ev.id));  // rid のある操作はルーティン
+        const tr = ev && ev.rid === undefined && ev.gid === undefined && rowById(Number(ev.id));  // rid はルーティン、gid は年次目標
         if (!tr) return;
         const applied = ev.applied_at ? Date.parse(ev.applied_at) : NaN;
         if (!isNaN(applied) && !isNaN(built) && built >= applied) return;
         setDone(tr, ev.done === true);
       });
       refresh();
-      // ルーティンのチェックも同じ checks.json に {rid, date, done, at} を追記する。TODOの送信と同じ列に並べて順に送る
-      if (routine) {
-        routine.enable(ev => {
-          writing++;
-          const p = writes.then(() => pushEvent(ev));
-          writes = p.catch(() => {}).finally(() => { writing--; });
-          return p;
-        });
-        routine.overlay(events, built);
-      }
+      // ルーティン・年次目標のチェックも同じ checks.json に追記する（ルーティンは {rid, date, done, at}、目標は {gid, done, at}）。
+      // TODOの送信と同じ列に並べて順に送る
+      const enqueue = ev => {
+        writing++;
+        const p = writes.then(() => pushEvent(ev));
+        writes = p.catch(() => {}).finally(() => { writing--; });
+        return p;
+      };
+      if (routine) { routine.enable(enqueue); routine.overlay(events, built); }
+      if (goals) { goals.enable(enqueue); goals.overlay(events, built); }
     }).catch(err => {
+      if (goals) goals.release();
       say(/HTTP 40[134]/.test(err.message) ? "チェックボタンの鍵が無効か期限切れです（URLの末尾を #key にすると入れ直せます）。"
         : "チェックの状態を読み込めませんでした。チェックは今は使えません。");
     });
