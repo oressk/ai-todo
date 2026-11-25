@@ -13,6 +13,7 @@
     --s1: #2a78d6; --s2: #1baf7a; --s3: #c98500; --s4: #008300; --s5: #4a3aa7; --s6: #e34948; --s7: #e87ba4;
     --full: rgba(27,175,122,0.16);
     --gold: #d99a00; --gold-ink: #8a5d00; --gold-1: #fff7dc; --gold-2: #ffe9a6; --gold-line: #efc451;
+    --g0: #08714c; --g1: #1a5fb4; --g2: #b92b2a; --g3: #9a2fa3; --g4: #0b6f86; --g5: #84500c; --gx: #52514e; --g-wash: 14%;
   }
   @media (prefers-color-scheme: dark) {
     :root {
@@ -21,6 +22,7 @@
       --s1: #3987e5; --s2: #199e70; --s3: #c98500; --s4: #0ca30c; --s5: #9085e9; --s6: #e66767; --s7: #d55181;
       --full: rgba(25,158,112,0.24);
       --gold: #f2b51d; --gold-ink: #ffd36a; --gold-1: rgba(242,181,29,0.10); --gold-2: rgba(242,181,29,0.24); --gold-line: rgba(242,181,29,0.55);
+      --g0: #3ecf97; --g1: #5aa2f2; --g2: #f07a72; --g3: #dd8ce8; --g4: #4cc4d6; --g5: #d9985a; --gx: #c3c2b7; --g-wash: 18%;
     }
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -217,7 +219,11 @@
   .gl-pols li { grid-column: 1 / -1; display: grid; grid-template-columns: subgrid; align-items: center; gap: 3px 10px;
     padding: 9px 0; border-top: 1px solid var(--grid); overflow-wrap: anywhere; }
   .gl-pols li:first-child { border-top: none; padding-top: 2px; }
-  .gl-tag { font-size: 12px; font-weight: 700; color: var(--s1); background: var(--wash); border-radius: 99px; padding: 2px 10px;
+  /* 分類の色（2026-11-25 殿の依頼）。方針の札・目標の見出しの札・未達成のカードの左線。金色（達成）と紛らわしい黄は使わない */
+  .gl-c0 { --cat: var(--g0); } .gl-c1 { --cat: var(--g1); } .gl-c2 { --cat: var(--g2); }
+  .gl-c3 { --cat: var(--g3); } .gl-c4 { --cat: var(--g4); } .gl-c5 { --cat: var(--g5); } .gl-cx { --cat: var(--gx); }
+  .gl-tag { font-size: 12px; font-weight: 700; color: var(--cat, var(--s1)); background: color-mix(in srgb, var(--cat, var(--s1)) var(--g-wash), transparent);
+    border-radius: 99px; padding: 2px 10px;
     text-align: center; white-space: nowrap; }
   .gl-ptx { font-size: 15px; font-weight: 650; }
   .gl-ptx.wide { grid-column: 1 / -1; }
@@ -254,7 +260,7 @@
   .gl-gn.all { font-weight: 750; color: var(--gold-ink); }
   .gl-list { list-style: none; display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 10px; }
   .gl-card { position: relative; display: flex; align-items: flex-start; gap: 10px; min-width: 0; overflow: hidden;
-    padding: 12px 14px; background: var(--surface); border: 1px solid var(--border); border-left: 4px solid var(--s1); border-radius: 10px; }
+    padding: 12px 14px; background: var(--surface); border: 1px solid var(--border); border-left: 4px solid var(--cat, var(--s1)); border-radius: 10px; }
   .gl-card.done { background: linear-gradient(135deg, var(--gold-1), var(--gold-2)); border-color: var(--gold-line); border-left-color: var(--gold); }
   .gl-no { flex: none; padding-top: 2px; font-size: 12px; font-weight: 700; color: var(--muted); font-variant-numeric: tabular-nums; }
   .gl-card.done .gl-no { color: var(--gold-ink); }
@@ -334,7 +340,7 @@
 <header>
   <h1 class="ttl"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='3' fill='%231baf7a'/%3E%3Cpath d='M4 8.5l2.5 2.5L12 5.5' stroke='white' stroke-width='2' fill='none'/%3E%3C/svg%3E" alt="">タスク管理</h1>
   <span class="count">年次目標 <span id="n-goal">達成 0/13</span> ／ TODO 29件 ／ ルーティン 10件 ／ やりたい事 17件 ／ 備忘録 0件 ／ X Bookmark <span id="n-bm">…</span>件</span>
-  <div class="asof-row"><span class="asof" data-v="2026-11-25T18:25:39.270+09:00">最終更新 2026/11/25 18:25</span><nav class="hub" aria-label="ほかの管理ページ"><a href="http://192.168.1.81:8789/" title="AIシステム管理（自宅LAN内）" aria-label="AIシステム管理"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='3' fill='%237c3aed'/%3E%3Ctext x='8' y='12.4' text-anchor='middle' font-family='Arial,Helvetica,sans-serif' font-size='12.5' font-weight='700' fill='white'%3ES%3C/text%3E%3C/svg%3E" alt=""></a><a href="http://192.168.1.81:8789/projects/" title="プロジェクト管理（自宅LAN内）" aria-label="プロジェクト管理"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='3' fill='%232563eb'/%3E%3Ctext x='8' y='12.4' text-anchor='middle' font-family='Arial,Helvetica,sans-serif' font-size='12.5' font-weight='700' fill='white'%3EP%3C/text%3E%3C/svg%3E" alt=""></a></nav></div>
+  <div class="asof-row"><span class="asof" data-v="2026-11-25T18:40:59.612+09:00">最終更新 2026/11/25 18:40</span><nav class="hub" aria-label="ほかの管理ページ"><a href="http://192.168.1.81:8789/" title="AIシステム管理（自宅LAN内）" aria-label="AIシステム管理"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='3' fill='%237c3aed'/%3E%3Ctext x='8' y='12.4' text-anchor='middle' font-family='Arial,Helvetica,sans-serif' font-size='12.5' font-weight='700' fill='white'%3ES%3C/text%3E%3C/svg%3E" alt=""></a><a href="http://192.168.1.81:8789/projects/" title="プロジェクト管理（自宅LAN内）" aria-label="プロジェクト管理"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='3' fill='%232563eb'/%3E%3Ctext x='8' y='12.4' text-anchor='middle' font-family='Arial,Helvetica,sans-serif' font-size='12.5' font-weight='700' fill='white'%3EP%3C/text%3E%3C/svg%3E" alt=""></a></nav></div>
 </header>
 <p class="lead">年ごとの「年次目標」と、「やる必要があること（TODO）」、毎日・毎週の「ルーティン」、「いつかやりたい事」、覚えておきたい「備忘録」、Xでブックマークした投稿の一覧。X BookmarkはGrok Bot、ほかはClaude/Codexが更新しています。</p>
 <div class="tabs" role="tablist" aria-label="種類">
@@ -864,6 +870,17 @@
     const ofYear = y => list.filter(g => g.year === y), polOf = y => pols.filter(g => g.year === y);
     // 「【見出し】本文」を見出しと本文に分ける（方針・目標で共通）。形が違えば見出しなし
     const split = text => { const m = /^【([^】]+)】\s*(.+)$/.exec(text); return m ? {tag: m[1], body: m[2]} : {tag: "", body: text}; };
+    // 分類の色（2026-11-25 殿の依頼）。その年の方針の見出しの並び順に色を割り当てる。目標の分類は、同じ名前の方針、なければ名前が
+    // 含み合う方針（「新しい挑戦」と「挑戦」など）と同じ色、どちらもなければ次の色。「その他」は灰色。
+    // 年ごとに割り当てる（全部の年で通すと、別の年の方針を足したときに色が変わったり、同じ年の中で重なったりするため。レビューの指摘）
+    const COLOR_N = 6, OTHER = "その他";
+    const catClsOf = y => {
+      const keys = [];
+      polOf(y).forEach(p => { const c = split(p.text).tag; if (c && c !== OTHER && !keys.includes(c)) keys.push(c); });
+      const pk = keys.slice(), keyOf = c => keys.includes(c) ? c : pk.find(k => k.includes(c) || c.includes(k));
+      ofYear(y).forEach(g => { const c = split(g.text).tag; if (c && c !== OTHER && !keyOf(c)) keys.push(c); });
+      return c => { const i = c === OTHER ? -1 : keys.indexOf(keyOf(c)); return i < 0 ? "gl-cx" : "gl-c" + i % COLOR_N; };
+    };
     // その年の目標を分類（【】の見出し）ごとに分ける（2026-11-25 殿の依頼）。分類の並びは初めて出る順（その他は最後）、
     // 中の並びは登録の並び。見出しのない目標は「その他」に入れ、見出しのある目標が1つもない年は分けない（分類名は空）
     const groupsOf = y => {
@@ -924,7 +941,7 @@
     const render = () => {
       updateCounts();
       if (!years.length) { box.replaceChildren(make("p", "gl-empty", "年次目標はまだありません")); return; }
-      const y = year, t = tallyOf(y), today = todayJst(), ty = Number(today.slice(0, 4)), pct = pctOf(t), at = years.indexOf(y), groups = groupsOf(y);
+      const y = year, t = tallyOf(y), today = todayJst(), ty = Number(today.slice(0, 4)), pct = pctOf(t), at = years.indexOf(y), groups = groupsOf(y), catCls = catClsOf(y);
       // 見出し: 年（目標のある年が2つ以上なら前後へ移れる）と効果音の切り替え
       const head = make("div", "gl-head");
       const nav = (step, name, text) => {
@@ -992,7 +1009,7 @@
         return li;
       };
       const secs = groups.map(([name, gs]) => {
-        const sec = make("section", "gl-group"), ol = make("ol", "gl-list"), n = gs.filter(g => done.get(g.id)).length;
+        const sec = make("section", "gl-group" + (name ? " " + catCls(name) : "")), ol = make("ol", "gl-list"), n = gs.filter(g => done.get(g.id)).length;
         if (name) {
           const h = make("h5");
           h.append(make("span", "gl-tag", name), make("span", "gl-gn" + (n === gs.length ? " all" : ""), n + " / " + gs.length));
@@ -1007,6 +1024,7 @@
       const polBox = make("section", "gl-box gl-pol"), pl = make("ul", "gl-pols"), goalBox = make("section", "gl-box gl-goal");
       polOf(y).forEach(p => {
         const li = make("li"), s = split(p.text);
+        if (s.tag) li.className = catCls(s.tag);
         if (s.tag) li.append(make("span", "gl-tag", s.tag), make("span", "gl-ptx", s.body));
         else li.appendChild(make("span", "gl-ptx wide", p.text));
         if (typeof p.note === "string" && p.note) li.appendChild(make("span", "gl-pnote", p.note));
