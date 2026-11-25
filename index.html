@@ -245,6 +245,13 @@
   .gl-bar b { display: block; height: 100%; border-radius: 4px; background: linear-gradient(90deg, var(--gold), #ffd34d);
     transition: width 1.1s cubic-bezier(.2,.8,.2,1) .25s; }
   .gl-bar.time b { background: var(--muted); }
+  /* 目標の分類ごとのまとまり（2026-11-25 殿の依頼） */
+  .gl-group { display: grid; gap: 8px; min-width: 0; }
+  .gl-group + .gl-group { border-top: 1px solid var(--grid); padding-top: 12px; }
+  .gl-group h5 { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; }
+  .gl-group h5 .gl-tag { white-space: normal; overflow-wrap: anywhere; }
+  .gl-gn { font-size: 12.5px; font-weight: 600; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+  .gl-gn.all { font-weight: 750; color: var(--gold-ink); }
   .gl-list { list-style: none; display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 10px; }
   .gl-card { position: relative; display: flex; align-items: flex-start; gap: 10px; min-width: 0; overflow: hidden;
     padding: 12px 14px; background: var(--surface); border: 1px solid var(--border); border-left: 4px solid var(--s1); border-radius: 10px; }
@@ -327,7 +334,7 @@
 <header>
   <h1 class="ttl"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='3' fill='%231baf7a'/%3E%3Cpath d='M4 8.5l2.5 2.5L12 5.5' stroke='white' stroke-width='2' fill='none'/%3E%3C/svg%3E" alt="">タスク管理</h1>
   <span class="count">年次目標 <span id="n-goal">達成 0/13</span> ／ TODO 29件 ／ ルーティン 10件 ／ やりたい事 17件 ／ 備忘録 0件 ／ X Bookmark <span id="n-bm">…</span>件</span>
-  <div class="asof-row"><span class="asof" data-v="2026-11-25T17:13:44.231+09:00">最終更新 2026/11/25 17:13</span><nav class="hub" aria-label="ほかの管理ページ"><a href="http://192.168.1.81:8789/" title="AIシステム管理（自宅LAN内）" aria-label="AIシステム管理"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='3' fill='%237c3aed'/%3E%3Ctext x='8' y='12.4' text-anchor='middle' font-family='Arial,Helvetica,sans-serif' font-size='12.5' font-weight='700' fill='white'%3ES%3C/text%3E%3C/svg%3E" alt=""></a><a href="http://192.168.1.81:8789/projects/" title="プロジェクト管理（自宅LAN内）" aria-label="プロジェクト管理"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='3' fill='%232563eb'/%3E%3Ctext x='8' y='12.4' text-anchor='middle' font-family='Arial,Helvetica,sans-serif' font-size='12.5' font-weight='700' fill='white'%3EP%3C/text%3E%3C/svg%3E" alt=""></a></nav></div>
+  <div class="asof-row"><span class="asof" data-v="2026-11-25T18:25:39.270+09:00">最終更新 2026/11/25 18:25</span><nav class="hub" aria-label="ほかの管理ページ"><a href="http://192.168.1.81:8789/" title="AIシステム管理（自宅LAN内）" aria-label="AIシステム管理"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='3' fill='%237c3aed'/%3E%3Ctext x='8' y='12.4' text-anchor='middle' font-family='Arial,Helvetica,sans-serif' font-size='12.5' font-weight='700' fill='white'%3ES%3C/text%3E%3C/svg%3E" alt=""></a><a href="http://192.168.1.81:8789/projects/" title="プロジェクト管理（自宅LAN内）" aria-label="プロジェクト管理"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='3' fill='%232563eb'/%3E%3Ctext x='8' y='12.4' text-anchor='middle' font-family='Arial,Helvetica,sans-serif' font-size='12.5' font-weight='700' fill='white'%3EP%3C/text%3E%3C/svg%3E" alt=""></a></nav></div>
 </header>
 <p class="lead">年ごとの「年次目標」と、「やる必要があること（TODO）」、毎日・毎週の「ルーティン」、「いつかやりたい事」、覚えておきたい「備忘録」、Xでブックマークした投稿の一覧。X BookmarkはGrok Bot、ほかはClaude/Codexが更新しています。</p>
 <div class="tabs" role="tablist" aria-label="種類">
@@ -855,6 +862,17 @@
       if (years.includes(s)) year = s;
     } catch (e) {}
     const ofYear = y => list.filter(g => g.year === y), polOf = y => pols.filter(g => g.year === y);
+    // 「【見出し】本文」を見出しと本文に分ける（方針・目標で共通）。形が違えば見出しなし
+    const split = text => { const m = /^【([^】]+)】\s*(.+)$/.exec(text); return m ? {tag: m[1], body: m[2]} : {tag: "", body: text}; };
+    // その年の目標を分類（【】の見出し）ごとに分ける（2026-11-25 殿の依頼）。分類の並びは初めて出る順（その他は最後）、
+    // 中の並びは登録の並び。見出しのない目標は「その他」に入れ、見出しのある目標が1つもない年は分けない（分類名は空）
+    const groupsOf = y => {
+      const gs = ofYear(y), m = new Map();
+      if (!gs.some(g => split(g.text).tag)) return gs.length ? [["", gs]] : [];
+      gs.forEach(g => { const c = split(g.text).tag || "その他"; if (!m.has(c)) m.set(c, []); m.get(c).push(g); });
+      const all = [...m];
+      return all.filter(x => x[0] !== "その他").concat(all.filter(x => x[0] === "その他"));
+    };
     const tallyOf = y => { const gs = ofYear(y); return {done: gs.filter(g => done.get(g.id)).length, all: gs.length}; };
     const pctOf = t => t.all ? Math.round(100 * t.done / t.all) : 0;
     const days = (a, b) => Math.round((Date.parse(b + "T00:00:00Z") - Date.parse(a + "T00:00:00Z")) / 86400000);
@@ -906,7 +924,7 @@
     const render = () => {
       updateCounts();
       if (!years.length) { box.replaceChildren(make("p", "gl-empty", "年次目標はまだありません")); return; }
-      const y = year, t = tallyOf(y), today = todayJst(), ty = Number(today.slice(0, 4)), pct = pctOf(t), at = years.indexOf(y);
+      const y = year, t = tallyOf(y), today = todayJst(), ty = Number(today.slice(0, 4)), pct = pctOf(t), at = years.indexOf(y), groups = groupsOf(y);
       // 見出し: 年（目標のある年が2つ以上なら前後へ移れる）と効果音の切り替え
       const head = make("div", "gl-head");
       const nav = (step, name, text) => {
@@ -941,7 +959,7 @@
       big.append(make("span", null, "達成"), make("b", null, String(t.done)), make("span", null, "/ " + t.all));
       if (t.all && t.done === t.all) big.appendChild(make("span", "gl-all", "全部達成！"));
       else if (t.all) big.appendChild(make("span", "gl-left", "あと" + (t.all - t.done) + "個"));
-      ofYear(y).forEach(g => { const i = make("i", done.get(g.id) ? "on" : null); i.title = g.text; medals.appendChild(i); });
+      groups.forEach(([, gs]) => gs.forEach(g => { const i = make("i", done.get(g.id) ? "on" : null); i.title = g.text; medals.appendChild(i); }));
       stat.append(big, medals);
       if (y > ty) stat.appendChild(make("div", "gl-time", y + "年まで あと" + days(today, y + "-01-01") + "日"));
       else if (y < ty) stat.appendChild(make("div", "gl-time", y + "年は終わりました"));
@@ -954,12 +972,12 @@
         stat.append(line, bar);
       }
       hero.append(ring(pct), stat);
-      // 目標のカード（登録の並び）。達成した目標は金色にして、達成日とトロフィーを付ける
-      const ol = make("ol", "gl-list");
-      ofYear(y).forEach((g, i) => {
+      // 目標のカード。分類ごとに見出し（分類と達成数）を付けてまとめ、カードには本文だけを出す。番号は分類ごとに01から。
+      // 達成した目標は金色にして、達成日とトロフィーを付ける
+      const cardOf = (g, i) => {
         const d = done.get(g.id), li = make("li", "gl-card" + (d ? " done" : "")), body = make("div", "gl-body");
         li.dataset.gid = g.id;
-        body.appendChild(make("span", "gl-tx", g.text));
+        body.appendChild(make("span", "gl-tx", split(g.text).body));
         if (typeof g.note === "string" && g.note) body.appendChild(make("span", "gl-note", g.note));
         if (d) body.appendChild(make("span", "gl-date", (Number(d.slice(0, 4)) === y ? md(d) : d.split("-").join("/")) + " 達成"));
         if (push) {
@@ -971,21 +989,32 @@
         }
         li.append(make("span", "gl-no", String(i + 1).padStart(2, "0")), body);
         if (d) li.appendChild(make("span", "gl-trophy", "🏆"));
-        ol.appendChild(li);
+        return li;
+      };
+      const secs = groups.map(([name, gs]) => {
+        const sec = make("section", "gl-group"), ol = make("ol", "gl-list"), n = gs.filter(g => done.get(g.id)).length;
+        if (name) {
+          const h = make("h5");
+          h.append(make("span", "gl-tag", name), make("span", "gl-gn" + (n === gs.length ? " all" : ""), n + " / " + gs.length));
+          sec.appendChild(h);
+        }
+        ol.append(...gs.map(cardOf));
+        sec.appendChild(ol);
+        return sec;
       });
       // カードは2つ（2026-11-18 殿の依頼）: 方針（チェックなし）と目標。広い画面は左右、狭い画面は縦に並ぶ
-      // 方針の「【見出し】本文」は見出しを札にして、本文の頭をそろえる
+      // 方針の「【見出し】本文」も見出しを札にして、本文の頭をそろえる
       const polBox = make("section", "gl-box gl-pol"), pl = make("ul", "gl-pols"), goalBox = make("section", "gl-box gl-goal");
       polOf(y).forEach(p => {
-        const li = make("li"), m = /^【([^】]+)】\s*(.+)$/.exec(p.text);
-        if (m) li.append(make("span", "gl-tag", m[1]), make("span", "gl-ptx", m[2]));
+        const li = make("li"), s = split(p.text);
+        if (s.tag) li.append(make("span", "gl-tag", s.tag), make("span", "gl-ptx", s.body));
         else li.appendChild(make("span", "gl-ptx wide", p.text));
         if (typeof p.note === "string" && p.note) li.appendChild(make("span", "gl-pnote", p.note));
         pl.appendChild(li);
       });
       polBox.append(make("h4", null, "方針"), pl.children.length ? pl : make("p", "gl-none", "方針はまだありません"));
       goalBox.appendChild(make("h4", null, "目標"));
-      if (t.all) goalBox.append(hero, ol);
+      if (t.all) goalBox.append(hero, ...secs);
       else goalBox.appendChild(make("p", "gl-none", "目標はまだありません"));
       const cols = make("div", "gl-cols");
       cols.append(polBox, goalBox);
